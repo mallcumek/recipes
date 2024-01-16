@@ -1,5 +1,7 @@
+parameters:
+
+
 database:
-	# SQLite database source location
-	dsn: 'sqlite:%appDir%/../db/users.sqlite.db'
-	user:
-	password:
+	dsn: 'mysql:host=md392.wedos.net;dbname=d337245_mallcom'
+	user: a337245_mallcom
+	password: DXQEwJM6
