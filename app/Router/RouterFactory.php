@@ -18,6 +18,8 @@ final class RouterFactory
 	public static function createRouter(): RouteList
 	{
 		$router = new RouteList;
+        $router->addRoute('/login', 'Admin:Sign:in');
+        $router->addRoute('/registration', 'Admin:Sign:up');
 		// Default route that maps to the Admin Dashboard
         $router->addRoute('<presenter>/<action>', 'Admin:Homepage:default');
 		//default route : $router->addRoute('<presenter>/<action>', 'Admin:Dashboard:default');

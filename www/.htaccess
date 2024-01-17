@@ -15,9 +15,14 @@ Require all granted
 	# Uncomment the next line if you want to set the base URL for rewrites
 	# RewriteBase /
 
-	# Force usage of HTTPS (secure connection). Uncomment if you have SSL setup.
-	# RewriteCond %{HTTPS} !on
-	# RewriteRule .? https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    # ************************ redirect vše na https + bez www
+	# Force usage of HTTPS (secure connection). Uncomment if you have SSL setup. !odkomentováno dle výzvy pro HTTPS!
+	RewriteCond %{HTTPS} !on
+	RewriteRule .? https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    # co zacina na www presmerujeme na bez www !přidáno navíc!
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,QSA,L]
+    # ************************ end redirect vše na https + bez www
 
 	# Prevent access to files that start with a dot (like .htaccess or .git)
 	# Exception made for ".well-known" directory used for domain verification and other protocols
