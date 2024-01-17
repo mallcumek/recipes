@@ -26,7 +26,7 @@ Require all granted
 
 	# Prevent access to files that start with a dot (like .htaccess or .git)
 	# Exception made for ".well-known" directory used for domain verification and other protocols
-	RewriteCond %{REQUEST_FILENAME} -f
+	RewriteCond %{REQUEST_FILENAME} -fq
 	RewriteRule /\.|^\.(?!well-known/) - [F]
 
 	# Front controller pattern - All requests are routed through index.php
