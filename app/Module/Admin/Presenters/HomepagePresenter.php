@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Admin\Presenters;
 
 use Nette;
+use App\Model\PostFacade;
 use Nette\Application\UI\Form;
 
 /**
@@ -14,22 +15,25 @@ use Nette\Application\UI\Form;
 final class HomepagePresenter extends Nette\Application\UI\Presenter
 {
     // Incorporates methods to check user login status
-    //  use RequireLoggedUser;
+    // use RequireLoggedUser;
     // Vypnul jsem v HomepagePresenteru potřebu přihlášení, to dám do administrace
 
-    // Pripojeni k mysql
+    // Pripojeni k mysql přes fasádu PostFacade
     public function __construct(
-        private Nette\Database\Explorer $database,
-    ) {
+        private PostFacade $facade,
+    )
+    {
     }
+    // V sekci use máme App\Model\PostFacade, tak si můžeme zápis v PHP kódu zkrátit na PostFacade.
+    // O tento objekt požádáme v konstruktoru, zapíšeme jej do vlastnosti $facade a použijeme v metodě renderDefault.
+
 
     // Nyní načteme příspěvky z databáze a pošleme je do šablony, která je následně vykreslí jako HTML kód.
     // Pro tohle je určena takzvaná render metoda:
     public function renderDefault(): void
     {
-        $this->template->posts = $this->database
-            ->table('posts')
-            ->order('created_at DESC')
+        $this->template->posts = $this->facade
+            ->getPublicArticles()
             ->limit(5);
     }
 }
