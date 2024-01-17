@@ -2,3 +2,5 @@ vendor
 composer.lock
 temp
 .idea
+config/local.neon
+log/
