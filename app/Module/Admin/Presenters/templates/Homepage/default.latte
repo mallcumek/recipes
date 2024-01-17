@@ -7,7 +7,7 @@
 <div n:foreach="$posts as $post" class="post">
     <div class="date">{$post->created_at|date:'F j, Y'}</div>
     <h2><a href="{link Post:show $post->id}">{$post->title}</a></h2>
-    <div>{$post->content|truncate:256}</div>
+    <p>{$post->content|truncate:256}</p>
 </div>
 
 {* Verze bez n:atrbutů

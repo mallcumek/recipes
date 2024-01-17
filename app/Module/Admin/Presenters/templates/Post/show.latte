@@ -7,3 +7,22 @@
 <h1 n:block="title">{$post->title}</h1>
 
 <div class="post">{$post->content}</div>
+
+<h2>Comments</h2>
+{* Pokud je již formulář definován v presenteru, můžeme ho vykreslit (zobrazit) v šabloně.
+   To uděláme umístěním značky {control} na konec šablony, která vykresluje jeden konkrétní příspěvek, do Post/show.latte.
+   Protože se komponenta jmenuje commentForm (název je odvozen od názvu metody createComponentCommentForm), značka bude vypadat takto:
+*}
+{control commentForm}
+
+{* Všimněte si speciálního atributu n:tag-if. Již víte jak n:atributy fungují.
+   Pokud k atributu připojíte předponu tag-, funkcionalita se aplikuje pouze na HTML tag, ne na jeho obsah.
+   Toto nám umožňuje udělat ze jména komentátora odkaz pouze v případě, že poskytl svůj e-mail.
+*}
+{foreach $comments as $comment}
+    <p><b><a href="mailto:{$comment->email}" n:tag-if="$comment->email">
+                {$comment->name}
+            </a></b> napsal:</p>
+
+    <div>{$comment->content}</div>
+{/foreach}
