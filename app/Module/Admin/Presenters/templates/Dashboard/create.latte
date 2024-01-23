@@ -1,31 +1,39 @@
 {block content}
-<h1>Nový příspěvek</h1>
+<h1>New Post</h1>
 
 
 {control postForm}
 
-    {* toto funguje i s povinnym souborem
-    <form n:name=postForm class=form>
-        <div>
-            <label n:name=title>Title: <input n:name=title size=20 autofocus></label>
-        </div>
-        <div>
-          Title <textarea n:name="content" > </textarea>
-        </div>
-        <div>
-            <label n:name=image>Image input: <input n:name=image></label>
-        </div>
-        <div>
-            <input n:name=send class="btn btn-default">
-        </div>
-    </form>
+{* toto funguje i s povinnym souborem
+<form n:name=postForm class=form>
+    <div>
+        <label n:name=title>Title: <input n:name=title size=20 autofocus></label>
+    </div>
+    <div>
+      Title <textarea n:name="content" > </textarea>
+    </div>
+    <div>
+        <label n:name=image>Image input: <input n:name=image></label>
+    </div>
+    <div>
+        <input n:name=send class="btn btn-default">
+    </div>
+</form>
 {/block}
 *}
-
+<h2>Image preview</h2>
+<img id="image-preview" src="{$basePath}/img/stonozka-low-intensity-700w.webp" height="300" alt="Image preview" />
 {block scripts}
-    <script type ="text/javascript">
+    <script type="text/javascript">
+        // Form file upload required
         document.getElementById("frm-postForm-image").required = true;
-
+        // Preview an image before it is uploaded
+        document.getElementById('frm-postForm-image').onchange = evt => {
+            const [file] = evt.target.files;
+            if (file) {
+                document.getElementById('image-preview').src = URL.createObjectURL(file);
+            }
+        };
     </script>
 
 {/block}

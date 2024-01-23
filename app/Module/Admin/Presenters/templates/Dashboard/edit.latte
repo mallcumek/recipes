@@ -2,3 +2,17 @@
 <h1>Upravit příspěvek</h1>
 
 {control postForm}
+<h2>Image preview</h2>
+<img id="image-preview" src="https://placehold.co/300x300?text=You can change the image." height="300" alt="Image preview" />
+{/block}
+{block scripts}
+<script type="text/javascript">
+
+    // Preview an image before it is uploaded
+    document.getElementById('frm-postForm-image').onchange = evt => {
+        const [file] = evt.target.files;
+        if (file) {
+            document.getElementById('image-preview').src = URL.createObjectURL(file);
+        }
+    };
+</script>

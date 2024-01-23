@@ -4,3 +4,5 @@ temp
 .idea
 config/local.neon
 log/
+www/img
+www/data

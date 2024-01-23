@@ -132,15 +132,34 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         $originalName = $file->getSanitizedName();
         // Odstranění staré přípony (např. .jpeg)
         $imageNameWithoutExtension = pathinfo($originalName, PATHINFO_FILENAME);
-        // Udelame novy nazev s webp pro ulozeni do mysql, protoze u resizu menime formát obrázku
-        $newImageNameWebp = $imageNameWithoutExtension . ".webp";
-        // Prevod stringu na male znaky
-        $newImageNameWebp = strtolower($newImageNameWebp);
-        $originalImageNameStrtoLower = strtolower($originalName);
 
+        $originalImageNameStrtoLower = strtolower($originalName);
+        // Udelame novy nazev malými písmeny s webp pro ulozeni do mysql, protoze u resizu menime formát obrázku. Tohle je největší width,zbytek bude jen pro srcset
+        $newImageNameWebp = $imageNameWithoutExtension . "-1920w.webp";
+        $newImageNameWebp = strtolower($newImageNameWebp);
+        // Názvy pro menší obrázky webp do srcset, které následně uložíme jako soubory
+        $newImageNameWebp1800 = $imageNameWithoutExtension . "-1800w.webp";
+        $newImageNameWebp1800 = strtolower($newImageNameWebp1800);
+        $newImageNameWebp1600 = $imageNameWithoutExtension . "-1600w.webp";
+        $newImageNameWebp1600 = strtolower($newImageNameWebp1600);
+        $newImageNameWebp1400 = $imageNameWithoutExtension . "-1400w.webp";
+        $newImageNameWebp1400 = strtolower($newImageNameWebp1400);
+        $newImageNameWebp1200 = $imageNameWithoutExtension . "-1200w.webp";
+        $newImageNameWebp1200 = strtolower($newImageNameWebp1200);
+        $newImageNameWebp1000 = $imageNameWithoutExtension . "-1000w.webp";
+        $newImageNameWebp1000 = strtolower($newImageNameWebp1000);
+        $newImageNameWebp800 = $imageNameWithoutExtension . "-800w.webp";
+        $newImageNameWebp800 = strtolower($newImageNameWebp800);
+        $newImageNameWebp600 = $imageNameWithoutExtension . "-600w.webp";
+        $newImageNameWebp600 = strtolower($newImageNameWebp600);
+        $newImageNameWebp400 = $imageNameWithoutExtension . "-400w.webp";
+        $newImageNameWebp400 = strtolower($newImageNameWebp400);
+        $newImageNameWebp200 = $imageNameWithoutExtension . "-200w.webp";
+        $newImageNameWebp200 = strtolower($newImageNameWebp200);
 
         // Přesun souboru do cílového adresáře
         $file->move($postDir . '/' . $originalImageNameStrtoLower);
+
         // Vytvoření instance třídy Image pro manipulaci s obrázkem
         $image = Image::fromFile($postDir . '/' . $originalImageNameStrtoLower);
         //pokud je obrazek vetsi 1920px tak ho resizni na 1600 a zbytek dopocitej
@@ -151,10 +170,95 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         }
         // Přesuň soubor do složky "$uploadDir = __DIR__ . '/../../../../www/data'" (resized)
         $image->save($postDir . '/' . $newImageNameWebp, 80, Image::WEBP);
+
+        //****************** Pro každou zmenšenou fotku zvášť resize blok **********************
+
+        // Vytvoření kopie původní instance obrázku v 1800w
+        $thumb1800 = Image::fromString($image->toString());
+        if ($thumb1800->getWidth() >= 1800) {
+            $thumb1800->resize(1800, null);
+            $thumb1800->sharpen();
+        }
+        $thumb1800->save($postDir . '/' . $newImageNameWebp1800, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 1600w
+        $thumb1600 = Image::fromString($image->toString());
+        if ($thumb1600->getWidth() >= 1600) {
+            $thumb1600->resize(1600, null);
+            $thumb1600->sharpen();
+        }
+        $thumb1600->save($postDir . '/' . $newImageNameWebp1600, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 1400w
+        $thumb1400 = Image::fromString($image->toString());
+        if ($thumb1400->getWidth() >= 1400) {
+            $thumb1400->resize(1400, null);
+            $thumb1400->sharpen();
+        }
+        $thumb1400->save($postDir . '/' . $newImageNameWebp1400, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 1200w
+        $thumb1200 = Image::fromString($image->toString());
+        if ($thumb1200->getWidth() >= 1200) {
+            $thumb1200->resize(1200, null);
+            $thumb1200->sharpen();
+        }
+        $thumb1200->save($postDir . '/' . $newImageNameWebp1200, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 1000w
+        $thumb1000 = Image::fromString($image->toString());
+        if ($thumb1000->getWidth() >= 1000) {
+            $thumb1000->resize(1000, null);
+            $thumb1000->sharpen();
+        }
+        $thumb1000->save($postDir . '/' . $newImageNameWebp1000, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 800w
+        $thumb800 = Image::fromString($image->toString());
+        if ($thumb800->getWidth() >= 800) {
+            $thumb800->resize(800, null);
+            $thumb800->sharpen();
+        }
+        $thumb800->save($postDir . '/' . $newImageNameWebp800, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 600w
+        $thumb600 = Image::fromString($image->toString());
+        if ($thumb600->getWidth() >= 600) {
+            $thumb600->resize(600, null);
+            $thumb600->sharpen();
+        }
+        $thumb600->save($postDir . '/' . $newImageNameWebp600, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 400w
+        $thumb400 = Image::fromString($image->toString());
+        if ($thumb400->getWidth() >= 400) {
+            $thumb400->resize(400, null);
+            $thumb400->sharpen();
+        }
+        $thumb400->save($postDir . '/' . $newImageNameWebp400, 80, Image::WEBP);
+
+        // Vytvoření kopie původní instance obrázku v 200w
+        $thumb200 = Image::fromString($image->toString());
+        if ($thumb200->getWidth() >= 200) {
+            $thumb200->resize(200, null);
+            $thumb200->sharpen();
+        }
+        $thumb200->save($postDir . '/' . $newImageNameWebp200, 80, Image::WEBP);
+
+
+
+
+
+
+
+
+
+
+        // Uloží do funkce string cesty s názvem souboru ro následné uložení do mysql. Strašně důležitý.
         return '/data/' . $postId . '/' . $newImageNameWebp;
     }
 
-    // Přidáme novou stránku edit do presenteru EditPresenter:
+    // Přidáme novou stránku edit do presenteru Dashboard Presenter:
     public function renderEdit(int $postId): void
     {
         $post = $this->database
