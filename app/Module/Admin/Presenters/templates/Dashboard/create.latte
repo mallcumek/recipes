@@ -1,4 +1,31 @@
 {block content}
 <h1>Nový příspěvek</h1>
 
+
 {control postForm}
+
+    {* toto funguje i s povinnym souborem
+    <form n:name=postForm class=form>
+        <div>
+            <label n:name=title>Title: <input n:name=title size=20 autofocus></label>
+        </div>
+        <div>
+          Title <textarea n:name="content" > </textarea>
+        </div>
+        <div>
+            <label n:name=image>Image input: <input n:name=image></label>
+        </div>
+        <div>
+            <input n:name=send class="btn btn-default">
+        </div>
+    </form>
+{/block}
+*}
+
+{block scripts}
+    <script type ="text/javascript">
+        document.getElementById("frm-postForm-image").required = true;
+
+    </script>
+
+{/block}
