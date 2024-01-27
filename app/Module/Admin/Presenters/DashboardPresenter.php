@@ -64,7 +64,18 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             if (!$form['image']->isFilled()) {
                 $data['image'] = $post->image; // Předpokládám, že pole s názvem původního obrázku je 'image'.
             }
-
+            // Pokud je nahrán soubor
+            else{
+            // Získání původního názvu souboru
+            $file = $data['image'];
+            $originalName = $file->getSanitizedName();
+            // Odstranění staré přípony (např. .jpeg)
+            $imageNameWithoutExtension = pathinfo($originalName, PATHINFO_FILENAME);
+            // Udelame novy nazev s webp pro ulozeni do mysql, protoze menime format
+            $newImageNameWebp = $imageNameWithoutExtension . ".webp";
+            $newImageNameWebp = strtolower($newImageNameWebp);
+            $data['image'] = $newImageNameWebp;
+            }
             $post->update($data);
         } else {
             // Získání původního názvu souboru
@@ -100,9 +111,13 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
 
             // Získání původního názvu souboru * duplikovaný jako v hlavní podmínce výše u zápisu do DB, opravit. ale funguje.
 
-            $originalNameup = $uploadedFile->getSanitizedName();
-            $originalNameStrtoLoweru = strtolower($originalNameup);
-            $post->update(['image' => $originalNameStrtoLoweru]);
+            $originalName = $uploadedFile->getSanitizedName();
+            // Odstranění staré přípony (např. .jpeg)
+            $originalName = pathinfo($originalName, PATHINFO_FILENAME);
+            //udelame novy nazev s webp pro ulozeni do mysql, protoze u resizu menime formát obrázku
+            $originalNameWebp = $originalName . ".webp";
+            $originalNameWebp = strtolower($originalNameWebp);
+            $post->update(['image' => $originalNameWebp]);
 
             //Aktualizace Databázového Záznamu:
             //Aktualizuje databázový záznam příspěvku ($post) pomocí metody update.
@@ -120,12 +135,26 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
     // Metoda pro uložení nahrávaného souboru na server
     private function storeUploadedFile(Nette\Http\FileUpload $file, int $postId): string
     {
+        // Funkce pro smazání obsahu adresáře
+        function clearDir($dir): void
+        {
+            $files = glob($dir . '/*');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
+
         $uploadDir = __DIR__ . '/../../../../www/data';
 
-        // Vytvoření adresáře pro každý příspěvek
+        // Vytvoření adresáře pro každý příspěvek cleardir maze puvodni soubory
         $postDir = $uploadDir . '/' . $postId;
         if (!is_dir($postDir)) {
             mkdir($postDir, 0777, true);
+
+        }else{
+            clearDir($postDir);
         }
 
         // Získání původního názvu souboru
@@ -133,11 +162,15 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         // Odstranění staré přípony (např. .jpeg)
         $imageNameWithoutExtension = pathinfo($originalName, PATHINFO_FILENAME);
 
+        // Pouzito pro nize zakomentovanou verzi ukladani originalniho souboru na disk
         $originalImageNameStrtoLower = strtolower($originalName);
+
         // Udelame novy nazev malými písmeny s webp pro ulozeni do mysql, protoze u resizu menime formát obrázku. Tohle je největší width,zbytek bude jen pro srcset
-        $newImageNameWebp = $imageNameWithoutExtension . "-1920w.webp";
+        $newImageNameWebp = $imageNameWithoutExtension . ".webp";
         $newImageNameWebp = strtolower($newImageNameWebp);
         // Názvy pro menší obrázky webp do srcset, které následně uložíme jako soubory
+        $newImageNameWebp1920 = $imageNameWithoutExtension . "-1920w.webp";
+        $newImageNameWebp1920 = strtolower($newImageNameWebp1920);
         $newImageNameWebp1800 = $imageNameWithoutExtension . "-1800w.webp";
         $newImageNameWebp1800 = strtolower($newImageNameWebp1800);
         $newImageNameWebp1600 = $imageNameWithoutExtension . "-1600w.webp";
@@ -157,21 +190,36 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         $newImageNameWebp200 = $imageNameWithoutExtension . "-200w.webp";
         $newImageNameWebp200 = strtolower($newImageNameWebp200);
 
-        // Přesun souboru do cílového adresáře
-        $file->move($postDir . '/' . $originalImageNameStrtoLower);
-
+        // Přečtení obsahu souboru z objektu FileUpload
+        $fileContent = $file->getContents();
         // Vytvoření instance třídy Image pro manipulaci s obrázkem
-        $image = Image::fromFile($postDir . '/' . $originalImageNameStrtoLower);
-        //pokud je obrazek vetsi 1920px tak ho resizni na 1600 a zbytek dopocitej
+        $image = Image::fromString($fileContent);
+
+/* Verze s ulozenim puvodniho obrazku na disk a nasledne cteni z disku na vytvoreni objektu
+
+        // Přesun souboru do cílového adresáře
+         $file->move($postDir . '/' . $originalImageNameStrtoLower);
+        // Vytvoření instance třídy Image pro manipulaci s obrázkem
+          $image = Image::fromFile($postDir . '/' . $originalImageNameStrtoLower);
+*/
+
+        //pokud je obrazek vetsi nez 1920px tak ho ulož v puvodni velikosti
         if ($image->getWidth() >= 1920) {
-            // Resize  image
-            $image->resize(1920, null);
             $image->sharpen();
         }
-        // Přesuň soubor do složky "$uploadDir = __DIR__ . '/../../../../www/data'" (resized)
+        // Ulož soubor do složky "$uploadDir = __DIR__ . '/../../../../www/data'" (resized)
         $image->save($postDir . '/' . $newImageNameWebp, 80, Image::WEBP);
 
         //****************** Pro každou zmenšenou fotku zvášť resize blok **********************
+
+        // Vytvoření kopie původní instance obrázku v 1800w
+        $thumb1920 = Image::fromString($image->toString());
+        //pokud je obrazek vetsi 1920px tak ho resizni na 1600 a zbytek dopocitej
+        if ($thumb1920->getWidth() >= 1920) {
+            $thumb1920->resize(1920, null);
+            $thumb1920->sharpen();
+        }
+        $thumb1920->save($postDir . '/' . $newImageNameWebp1920, 80, Image::WEBP);
 
         // Vytvoření kopie původní instance obrázku v 1800w
         $thumb1800 = Image::fromString($image->toString());
@@ -245,16 +293,10 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         }
         $thumb200->save($postDir . '/' . $newImageNameWebp200, 80, Image::WEBP);
 
+        //******************End Pro každou zmenšenou fotku zvášť resize blok **********************
 
 
-
-
-
-
-
-
-
-        // Uloží do funkce string cesty s názvem souboru ro následné uložení do mysql. Strašně důležitý.
+        // Uloží do funkce string cesty s názvem souboru pro následné uložení do mysql. Strašně důležitý.
         return '/data/' . $postId . '/' . $newImageNameWebp;
     }
 
