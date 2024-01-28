@@ -36,15 +36,20 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
     {
 
         $form = new Form;
-        $form->addText('title', 'Titulek:')->setRequired();
-        $form->addTextArea('content', 'Obsah:')->setRequired();
-
+        $form->addText('title', 'Recipe title:')->setRequired();
+        $form->addTextArea('content', 'Description:')->setRequired();
+        $form->addTextArea('ingrediens', 'Ingredients:')->setRequired();
+        $form->addTextArea('instructions', 'Directions:')->setRequired();
+        $form->addInteger('prep_time', 'Prep time:')
+            ->setHtmlAttribute('class', 'trida');
+        $form->addInteger('cook_time', 'Cook time:');
+            $form->addInteger('servings', 'Servings:');
         // Přidáváme pole pro nahrávání souborů
         $form->addUpload('image', 'Obrázek:');
 
         $form->addSubmit('send', 'Uložit a publikovat');
         $form->onSuccess[] = [$this, 'postFormSucceeded'];
-
+        $form->setRenderer($this->formatTemplateClass());
         return $form;
     }
 

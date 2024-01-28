@@ -15,8 +15,8 @@
    To uděláme umístěním značky {control} na konec šablony, která vykresluje jeden konkrétní příspěvek, do Post/show.latte.
    Protože se komponenta jmenuje commentForm (název je odvozen od názvu metody createComponentCommentForm), značka bude vypadat takto:
 *}
-{control commentForm}
-
+{*{control commentForm}*}
+{include "../@form.latte", name: commentForm}
 {* Všimněte si speciálního atributu n:tag-if. Již víte jak n:atributy fungují.
    Pokud k atributu připojíte předponu tag-, funkcionalita se aplikuje pouze na HTML tag, ne na jeho obsah.
    Toto nám umožňuje udělat ze jména komentátora odkaz pouze v případě, že poskytl svůj e-mail.
