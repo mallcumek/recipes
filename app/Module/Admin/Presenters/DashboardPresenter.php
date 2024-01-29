@@ -13,6 +13,7 @@ use Nette\Utils\Image;
 use Nette\Utils\ImageException;
 use Nette\Utils\ImageColor;
 use Nette\Utils\ImageType;
+use Nette\Utils\Strings;
 
 /**
  * Presenter for the dashboard view.
@@ -37,19 +38,30 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
 
         $form = new Form;
         $form->addText('title', 'Recipe title:')->setRequired();
-        $form->addTextArea('content', 'Description:')->setRequired();
-        $form->addTextArea('ingrediens', 'Ingredients:')->setRequired();
-        $form->addTextArea('instructions', 'Directions:')->setRequired();
+        $form->addTextArea('content', 'Description:')->setRequired()
+            ->setHtmlAttribute('rows', '5');
+        $form->addTextArea('ingrediens', 'Ingredients:')->setRequired()
+            ->setHtmlAttribute('rows', '5');
+        $form->addTextArea('instructions', 'Directions:')->setRequired()
+            ->setHtmlAttribute('rows', '5');
         $form->addInteger('prep_time', 'Prep time:')
             ->setHtmlAttribute('class', 'trida');
         $form->addInteger('cook_time', 'Cook time:');
-            $form->addInteger('servings', 'Servings:');
+        $form->addInteger('servings', 'Servings:');
+        $form->addTextArea('nutrition_facts', 'Nutrition Facts')
+            ->setHtmlAttribute('rows', '5');
         // Přidáváme pole pro nahrávání souborů
         $form->addUpload('image', 'Obrázek:');
+
+        // Přidání skrytého pole pro uživatelské jméno
+        $form->addHidden('username');
 
         $form->addSubmit('send', 'Uložit a publikovat');
         $form->onSuccess[] = [$this, 'postFormSucceeded'];
         $form->setRenderer($this->formatTemplateClass());
+
+        // Nastavení uživatelského jména do skrytého pole
+        $form['username']->setDefaultValue($this->getUser()->getIdentity()->username);
         return $form;
     }
 
@@ -68,18 +80,17 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             // použije se původní hodnota image z databáze.
             if (!$form['image']->isFilled()) {
                 $data['image'] = $post->image; // Předpokládám, že pole s názvem původního obrázku je 'image'.
-            }
-            // Pokud je nahrán soubor
-            else{
-            // Získání původního názvu souboru
-            $file = $data['image'];
-            $originalName = $file->getSanitizedName();
-            // Odstranění staré přípony (např. .jpeg)
-            $imageNameWithoutExtension = pathinfo($originalName, PATHINFO_FILENAME);
-            // Udelame novy nazev s webp pro ulozeni do mysql, protoze menime format
-            $newImageNameWebp = $imageNameWithoutExtension . ".webp";
-            $newImageNameWebp = strtolower($newImageNameWebp);
-            $data['image'] = $newImageNameWebp;
+            } // Pokud je nahrán soubor
+            else {
+                // Získání původního názvu souboru
+                $file = $data['image'];
+                $originalName = $file->getSanitizedName();
+                // Odstranění staré přípony (např. .jpeg)
+                $imageNameWithoutExtension = pathinfo($originalName, PATHINFO_FILENAME);
+                // Udelame novy nazev s webp pro ulozeni do mysql, protoze menime format
+                $newImageNameWebp = $imageNameWithoutExtension . ".webp";
+                $newImageNameWebp = strtolower($newImageNameWebp);
+                $data['image'] = $newImageNameWebp;
             }
             $post->update($data);
         } else {
@@ -94,7 +105,9 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             $originalNameStrtoLower = strtolower($originalName);
             // Ulož název souboru obrázku do pole
             $data['image'] = $newImageNameWebp;
-
+            //Titulek projede funkci webalize na seo titulek - vynecha znaky, diakritiku, male pismo, mezery na pomlcky. blabla
+            $seoTitle = Strings::webalize($data['title']);
+            $data['seotitle'] = $seoTitle;
             $post = $this->database->table('posts')->insert($data);
         }
 
@@ -158,7 +171,7 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         if (!is_dir($postDir)) {
             mkdir($postDir, 0777, true);
 
-        }else{
+        } else {
             clearDir($postDir);
         }
 
@@ -200,13 +213,13 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         // Vytvoření instance třídy Image pro manipulaci s obrázkem
         $image = Image::fromString($fileContent);
 
-/* Verze s ulozenim puvodniho obrazku na disk a nasledne cteni z disku na vytvoreni objektu
+        /* Verze s ulozenim puvodniho obrazku na disk a nasledne cteni z disku na vytvoreni objektu
 
-        // Přesun souboru do cílového adresáře
-         $file->move($postDir . '/' . $originalImageNameStrtoLower);
-        // Vytvoření instance třídy Image pro manipulaci s obrázkem
-          $image = Image::fromFile($postDir . '/' . $originalImageNameStrtoLower);
-*/
+                // Přesun souboru do cílového adresáře
+                 $file->move($postDir . '/' . $originalImageNameStrtoLower);
+                // Vytvoření instance třídy Image pro manipulaci s obrázkem
+                  $image = Image::fromFile($postDir . '/' . $originalImageNameStrtoLower);
+        */
 
         //pokud je obrazek vetsi nez 1920px tak ho ulož v puvodni velikosti
         if ($image->getWidth() >= 1920) {
