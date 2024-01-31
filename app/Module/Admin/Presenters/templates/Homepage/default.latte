@@ -9,7 +9,7 @@
 
             <header class="box-head"> <img src="{$post->image_path}" width="100%" class="object-fit-contain"></header>
             <main class="box-body">
-                <h2 class="fs-5 mt-2"><a href="{link Post:show $post->id}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
+                <h2 class="fs-5 mt-2"><a href="{$post->id}-{$post->seotitle}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
                 <p>
 
                     {$post->instructions|truncate:256}</p>

@@ -4,6 +4,7 @@ namespace App\Module\Admin\Presenters;
 
 use App\Forms;
 use Nette;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 final class PostPresenter extends Nette\Application\UI\Presenter
@@ -17,7 +18,10 @@ final class PostPresenter extends Nette\Application\UI\Presenter
     // Připojení k databázi pro zobrazení příspěvku
     // Metoda renderShow vyžaduje jeden argument – ID jednoho konkrétního článku, který má být zobrazen.
     // Poté tento článek načte z databáze a předá ho do šablony.
-    public function renderShow(int $postId): void
+    /**
+     * @throws BadRequestException
+     */
+    public function renderShow(int $postId , ?string $seotitle): void
     {
         $post = $this->database
             ->table('posts')
@@ -26,6 +30,9 @@ final class PostPresenter extends Nette\Application\UI\Presenter
         // Pozor na to, že ve vývojářském módu (localhost) tuto chybovou stránku neuvidíte.
         if (!$post) {
             $this->error('Stránka nebyla nalezena');
+        }
+        if($seotitle !== $post->seotitle ) {
+            $this->error('Stránka nebyla nalezena, nerovna se seotitle');
         }
         // Uložení příspěvku do šablony
         $this->template->post = $post;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auxiliary\Presenters;
 
 use Nette;
+use Nette\Application\BadRequestException;
 
 
 /**
@@ -12,7 +13,10 @@ use Nette;
  */
 final class Error4xxPresenter extends Nette\Application\UI\Presenter
 {
-	protected function checkHttpMethod(): void
+    /**
+     * @throws BadRequestException
+     */
+    protected function checkHttpMethod(): void
 	{
 		// allow access via all HTTP methods and ensure the request is a forward (internal redirect)
 		if (!$this->getRequest()->isMethod(Nette\Application\Request::FORWARD)) {
