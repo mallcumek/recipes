@@ -38,4 +38,14 @@ final class PostFacade
             ->fetch();
     }
 
+
+    public function getPublicArticlesByCategory(string $categorySeoTitle)
+    {
+        return $this->database
+            ->table('posts')
+            ->where('category_seotitle', $categorySeoTitle)
+            ->where('created_at < ', new \DateTime)
+            ->order('created_at DESC');
+    }
+
 }

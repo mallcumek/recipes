@@ -32,7 +32,7 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
         // Nacteni kategorii do sablony
         $this->template->categories = $this->facade
             ->getCategories()
-            ->limit(5);
+            ->limit(50);
 
     }
     // Nyní načteme příspěvky z databáze a pošleme je do šablony, která je následně vykreslí jako HTML kód.
@@ -41,6 +41,6 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
     {
         $this->template->posts = $this->facade
             ->getPublicArticles()
-            ->limit(5);
+            ->limit(50);
     }
 }

@@ -15,6 +15,7 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
         private PostFacade $facade,
     )
     {
+        $this->facade = $facade;
     }
 
     public function beforeRender(): void
@@ -22,9 +23,10 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
         // Nacteni kategorii do sablony
         $this->template->categories = $this->facade
             ->getCategories()
-            ->limit(5);
+            ->limit(50);
 
     }
+
     public function renderShow(?string $category_seotitle): void
     {
         // Nacteni kategorie do sablony
@@ -33,7 +35,7 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
 
         // Nacteni postů do sablony
         $this->template->posts = $this->facade
-            ->getPublicArticles()
-            ->limit(5);
+            ->getPublicArticlesByCategory($category_seotitle)
+            ->limit(50);
     }
 }
