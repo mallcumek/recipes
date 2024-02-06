@@ -4,24 +4,29 @@ namespace App\Module\Admin\Presenters;
 
 use App\Forms;
 use Nette;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use App\Model\PostFacade;
 
 final class PostPresenter extends Nette\Application\UI\Presenter
 {
+    // private PostFacade $facade pomohlo, aby beforeRender fungoval.
     public function __construct(
-        private Nette\Database\Explorer $database,
+        private Nette\Database\Explorer $database, private PostFacade $facade
     )
     {
     }
+    public function beforeRender(): void
+    {
+        // Nacteni kategorii do sablony
+        $this->template->categories = $this->facade
+            ->getCategories()
+            ->limit(5);
 
+    }
     // Připojení k databázi pro zobrazení příspěvku
     // Metoda renderShow vyžaduje jeden argument – ID jednoho konkrétního článku, který má být zobrazen.
     // Poté tento článek načte z databáze a předá ho do šablony.
-    /**
-     * @throws BadRequestException
-     */
-    public function renderShow(int $postId , ?string $seotitle): void
+    public function renderShow(int $postId): void
     {
         $post = $this->database
             ->table('posts')
@@ -30,9 +35,6 @@ final class PostPresenter extends Nette\Application\UI\Presenter
         // Pozor na to, že ve vývojářském módu (localhost) tuto chybovou stránku neuvidíte.
         if (!$post) {
             $this->error('Stránka nebyla nalezena');
-        }
-        if($seotitle !== $post->seotitle ) {
-            $this->error('Stránka nebyla nalezena, nerovna se seotitle');
         }
         // Uložení příspěvku do šablony
         $this->template->post = $post;

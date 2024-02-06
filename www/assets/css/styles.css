@@ -1,18 +1,12 @@
 /*custom styles*/
-
-@media only screen and (min-width: 40em) {
-    .recipe-detail-container{
-        max-width: 50rem;
-    }
-/* Recipe listing
-/* Kupa livancu - Navrhovy vzor, grid uvnitr flexboxu. box-container je definovan v html d-flex flex-wrap */
 .box-container{
+
 }
 .box{
-    max-width: 18rem;
+    max-width: 20rem;
     margin: 0 1rem 1rem 0;
     display:grid ;
-    grid-template-rows: auto 18rem auto;
+    grid-template-rows: auto 20rem auto;
 }
 .box-body{
     padding: 1rem;
@@ -21,5 +15,3 @@
 .box-foot{
     padding: 1rem;
 }
-}
-/* ******* end kupa livancu

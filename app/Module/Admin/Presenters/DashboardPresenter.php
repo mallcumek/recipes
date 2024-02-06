@@ -14,6 +14,7 @@ use Nette\Utils\ImageException;
 use Nette\Utils\ImageColor;
 use Nette\Utils\ImageType;
 use Nette\Utils\Strings;
+use App\Model\PostFacade;
 
 /**
  * Presenter for the dashboard view.
@@ -27,11 +28,18 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
 
     // Konstruktor, který vyžaduje dazabázové spojení
     public function __construct(
-        private Nette\Database\Explorer $database,
+        private Nette\Database\Explorer $database, private PostFacade $facade
     )
     {
     }
+    public function beforeRender(): void
+    {
+        // Nacteni kategorii do sablony
+        $this->template->categories = $this->facade
+            ->getCategories()
+            ->limit(5);
 
+    }
     // Formular pro ukladani (editovanych) prispevku
     protected function createComponentPostForm(): Form
     {
@@ -48,10 +56,10 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             ->setHtmlAttribute('class', 'trida');
         $form->addInteger('cook_time', 'Cook time:');
         $form->addInteger('servings', 'Servings:');
-        $form->addTextArea('nutrition_facts', 'Nutrition Facts')
+        $form->addTextArea('chefs_notes', 'Chef\'s Notes')
             ->setHtmlAttribute('rows', '5');
         // Přidáváme pole pro nahrávání souborů
-        $form->addUpload('image', 'Obrázek:');
+        $form->addUpload('image', 'Image:');
 
         // Přidání skrytého pole pro uživatelské jméno
         $form->addHidden('username');
@@ -321,6 +329,7 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
     // Přidáme novou stránku edit do presenteru Dashboard Presenter:
     public function renderEdit(int $postId): void
     {
+
         $post = $this->database
             ->table('posts')
             ->get($postId);

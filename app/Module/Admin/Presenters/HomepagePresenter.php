@@ -27,7 +27,14 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
     // V sekci use máme App\Model\PostFacade, tak si můžeme zápis v PHP kódu zkrátit na PostFacade.
     // O tento objekt požádáme v konstruktoru, zapíšeme jej do vlastnosti $facade a použijeme v metodě renderDefault.
 
+    public function beforeRender(): void
+    {
+        // Nacteni kategorii do sablony
+        $this->template->categories = $this->facade
+            ->getCategories()
+            ->limit(5);
 
+    }
     // Nyní načteme příspěvky z databáze a pošleme je do šablony, která je následně vykreslí jako HTML kód.
     // Pro tohle je určena takzvaná render metoda:
     public function renderDefault(): void
