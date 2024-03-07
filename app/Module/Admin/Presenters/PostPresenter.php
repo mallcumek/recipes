@@ -46,15 +46,15 @@ final class PostPresenter extends Nette\Application\UI\Presenter
     {
         $form = new Form; // means Nette\Application\UI\Form
 
-        $form->addText('name', 'Jméno:')
+        $form->addText('name', 'Name:')
             ->setRequired();
 
         $form->addEmail('email', 'E-mail:');
 
-        $form->addTextArea('content', 'Komentář:')
+        $form->addTextArea('content', 'Message:')
             ->setRequired();
 
-        $form->addSubmit('send', 'Publikovat komentář');
+        $form->addSubmit('send', 'Send');
         $form->onSuccess[] = $this->commentFormSucceeded(...);
 
         return $form;

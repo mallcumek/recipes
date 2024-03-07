@@ -1,21 +1,23 @@
 {block content}
-<h1>Homepage default.latte</h1>
-<a n:href="Dashboard:create">Napsat nový příspěvek</a>
-<p>To je nová homepage od kočky</p>
+<h1>Online recipes</h1>
+{if $user->isLoggedIn()}
+<a n:href="Dashboard:create">Write new post</a>
+{/if}
+<p>New Kočky's Cook Book</p>
 
-<div class="box-container d-flex flex-wrap border border-primary">
+<div class="box-container d-flex flex-wrap ">
     {* Cylus čtení z databáze a výpisu *}
-    <div n:foreach="$posts as $post" class="box border border-warning">
+    <div n:foreach="$posts as $post" class="box border border-secondary-subtle">
 
 
             <header class="box-head"> <img src="{$post->image_path}" width="100%" class="object-fit-contain"></header>
             <main class="box-body">
-                <h2 class="fs-5 mt-2"><a href="{link Post:show $post->id}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
+                <h2 class="fs-5 mt-2"><a href="/recipe/{$post->id}-{$post->seotitle}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
                 <p>
 
-                    {$post->content|truncate:256}</p>
+                    {$post->instructions|truncate:200}</p>
             </main>
-            <footer class="box-foot">
+            <footer class="box-foot border border-top border-secondary-subtle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                            class="bi bi-clock" viewBox="0 0 16 16">
                     <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>

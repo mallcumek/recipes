@@ -43,12 +43,31 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
     // Formular pro ukladani (editovanych) prispevku
     protected function createComponentPostForm(): Form
     {
+        // Zde načteme kategorie  do pole pro vypsání ve formuláři
+        $categories = $this->facade->getCategories();
+        $categoryOptions = [];
+        foreach ($categories as $category) {
+            // Předpokládáme, že máte sloupce 'category_seotitle' a 'category_title' v tabulce 'category'
+            $categoryOptions[$category->category_seotitle] = $category->category_title;
+        }
 
+        // Zde načteme subkategorie  do pole pro vypsání ve formuláři
+        $subcategories = $this->facade->getAllSubCategories();
+        $subcategoryOptions = [];
+        foreach ($subcategories as $subcategory) {
+            // Předpokládáme, že máte sloupce 'category_seotitle' a 'category_title' v tabulce 'category'
+            $subcategoryOptions[$subcategory->subcategory_seotitle] = $subcategory->subcategory_title;
+        }
+        // Přidání prázdné možnosti pro subkategorie
+        $subcategoryOptions = ['' => 'No subcategory'] + $subcategoryOptions;
         $form = new Form;
         $form->addText('title', 'Recipe title:')->setRequired();
+        $form->addSelect('category_seotitle', 'Category select:', $categoryOptions); // Použijeme dynamicky načtené kategorie
+        $form->addSelect('subcategory_seotitle', 'Category select:', $subcategoryOptions); // Použijeme dynamicky načtené subkategorie
+
         $form->addTextArea('content', 'Description:')->setRequired()
             ->setHtmlAttribute('rows', '5');
-        $form->addTextArea('ingrediens', 'Ingredients:')->setRequired()
+        $form->addTextArea('ingredients', 'Ingredients:')->setRequired()
             ->setHtmlAttribute('rows', '5');
         $form->addTextArea('instructions', 'Directions:')->setRequired()
             ->setHtmlAttribute('rows', '5');
@@ -57,6 +76,8 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         $form->addInteger('cook_time', 'Cook time:');
         $form->addInteger('servings', 'Servings:');
         $form->addTextArea('chefs_notes', 'Chef\'s Notes')
+            ->setHtmlAttribute('rows', '5');
+        $form->addTextArea('nutrition_facts', 'Nutrition Facts')
             ->setHtmlAttribute('rows', '5');
         // Přidáváme pole pro nahrávání souborů
         $form->addUpload('image', 'Image:');

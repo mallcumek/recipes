@@ -29,6 +29,12 @@ final class PostFacade
             ->table('category')
             ->order('category_title ASC'); // ASC pro vzestupné řazení, DESC pro sestupné
     }
+    public function getAllSubCategories()
+    {
+        return $this->database
+            ->table('subcategory')
+            ->order('subcategory_title ASC'); // ASC pro vzestupné řazení, DESC pro sestupné
+    }
 
     public function getCategoryBySeoTitle(string $seoTitle)
     {
@@ -47,5 +53,33 @@ final class PostFacade
             ->where('created_at < ', new \DateTime)
             ->order('created_at DESC');
     }
+    /*
+    public function getPublicArticlesBySubcategory(string $subcategorySeoTitle)
+    {
+        return $this->database
+            ->table('posts')
+            ->where('subcategory_seotitle', $subcategorySeoTitle)
+            ->where('created_at < ', new \DateTime)
+            ->order('created_at DESC');
+    }*/
+    public function getPublicArticlesBySubcategory(string $subcategorySeoTitle)
+    {
+        return $this->database
+            ->table('posts')
+            ->where('created_at < ?', new \DateTime())
+            ->where('subcategory_seotitle = ? OR subcategory_seotitle2 = ?', $subcategorySeoTitle, $subcategorySeoTitle)
+            ->order('created_at DESC');
+    }
+
+
+    public function getSubCategories(string $seoTitle)
+    {
+        return $this->database
+            ->table('subcategory')
+            ->where('category_seotitle', $seoTitle)
+            ->order('subcategory_title ASC'); // ASC pro vzestupné řazení, DESC pro sestupné
+    }
+
+
 
 }

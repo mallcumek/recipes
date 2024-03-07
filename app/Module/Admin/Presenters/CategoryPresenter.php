@@ -33,9 +33,22 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
         $category = $this->facade->getCategoryBySeoTitle($category_seotitle);
         $this->template->category = $category;
 
+        // Nacteni subkategorii do sablony
+        $subcategories = $this->facade->getSubCategories($category_seotitle);
+        $this->template->subcategories = $subcategories;
+
         // Nacteni postů do sablony
         $this->template->posts = $this->facade
             ->getPublicArticlesByCategory($category_seotitle)
             ->limit(50);
+    }
+    public function renderSubcategory(?string $subcategory_seotitle): void
+    {
+        // Nacteni postů podle podkategorie do sablony
+        $posts = $this->facade->getPublicArticlesBySubcategory($subcategory_seotitle);
+        $this->template->posts = $posts;
+
+
+
     }
 }

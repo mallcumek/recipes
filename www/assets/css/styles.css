@@ -2,11 +2,15 @@
 .box-container{
 
 }
+/* původne:  grid-template-rows: auto 20rem auto; = upraveno pro menší obsah  */
 .box{
-    max-width: 20rem;
+    max-width: 15rem;
     margin: 0 1rem 1rem 0;
     display:grid ;
-    grid-template-rows: auto 20rem auto;
+    grid-template-rows: auto 10rem auto;
+}
+.box-head{
+
 }
 .box-body{
     padding: 1rem;

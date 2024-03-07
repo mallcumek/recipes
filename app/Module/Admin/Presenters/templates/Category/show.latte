@@ -1,6 +1,6 @@
 {block content}
 
-<p><a n:href="Homepage:default">← zpět na výpis příspěvků</a></p>
+
 {* Ta podminka by tu nemela byt, ale DashboardPresenter nezna ty promenny a hazi chyby. Chci to resit beforeRender
 {ifset $category}*}
 
@@ -8,6 +8,13 @@
 
 <div class="post">{$category->description}</div>
 
+<p>
+<ul class="list-group list-group-horizontal">
+<li class="list-group-item border border-0" n:foreach="$subcategories as $cat">
+    <a class="text-uppercase fw-bold link-underline link-underline-opacity-0" n:href="Category:subcategory $cat->subcategory_seotitle" >{$cat->subcategory_title}</a>
+</li>
+</ul>
+</p>
 
 <div class="box-container d-flex flex-wrap border border-primary">
     {* Cyklus čtení z databáze a výpisu *}
@@ -40,4 +47,4 @@
 </div>
 
 
-    <p>Kategorie nenalezena.</p>
+
