@@ -1,6 +1,18 @@
 {block content}
- subcategory
+<p class="subcategory-info">
+<ul class="list-group list-group-horizontal">
+ <li class="list-group-item border border-0" n:foreach="$subcategories as $cat">
+  <a n:href="Category:subcategory, 'category_seotitle' => $category->category_seotitle, 'subcategory_seotitle' => $cat->subcategory_seotitle">{$cat->subcategory_title}</a>
 
+ </li>
+</ul>
+</p>
+ <h1>{$subcategory->subcategory_title}</h1>
+ <p>{$subcategory->description}</p>
+
+
+<div class="box-container d-flex flex-wrap border border-primary">
+ {* Cyklus čtení z databáze a výpisu *}
 <div n:foreach="$posts as $post" class="box border border-warning">
 
 
@@ -25,4 +37,6 @@
   </svg>
   {$randomNumber = rand(1, 300)} x   <!-- Vytvoření proměnné s náhodným číslem -->
  </footer>
+</div>
+
 </div>

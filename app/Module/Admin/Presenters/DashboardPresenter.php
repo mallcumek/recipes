@@ -62,8 +62,13 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         $subcategoryOptions = ['' => 'No subcategory'] + $subcategoryOptions;
         $form = new Form;
         $form->addText('title', 'Recipe title:')->setRequired();
+        $form->addText('title_longer', 'Recipe longer title:');
+        $form->addTextArea('meta_description', 'Meta description:')
+        ->setHtmlAttribute('rows', '3');
         $form->addSelect('category_seotitle', 'Category select:', $categoryOptions); // Použijeme dynamicky načtené kategorie
-        $form->addSelect('subcategory_seotitle', 'Category select:', $subcategoryOptions); // Použijeme dynamicky načtené subkategorie
+        $form->addSelect('subcategory_seotitle', 'Subategory select:', $subcategoryOptions); // Použijeme dynamicky načtené subkategorie
+        $form->addSelect('subcategory_seotitle2', 'Subategory 2 select:', $subcategoryOptions); // Použijeme dynamicky načtené subkategorie 2
+        $form->addSelect('subcategory_seotitle3', 'Subategory 3 select:', $subcategoryOptions); // Použijeme dynamicky načtené subkategorie 3
 
         $form->addTextArea('content', 'Description:')->setRequired()
             ->setHtmlAttribute('rows', '5');
@@ -170,9 +175,11 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             //Aktualizuje databázový záznam příspěvku ($post) pomocí metody update.
             //Nová hodnota pole image_path je nastavena na hodnotu proměnné $imagePath, což je cesta k uloženému obrázku.
         }
-
+        // Nacteni seotitle a uprava redirectu na pouziti id + seotitle misto pouze ID. Chatgpt
+        $seoTitle = $data['seotitle'] ?? $post->seotitle;
         $this->flashMessage('Příspěvek byl úspěšně publikován.', 'success');
-        $this->redirect('Post:show', $post->id);
+        $this->redirect('Post:show', ['postId' => $post->id, 'seotitle' => $seoTitle]);;
+        // old redirect $this->redirect('Post:show', $post->id);
     }
     // Pokud je k dispozici parametr postId, znamená to, že budeme upravovat příspěvek.
     // V tom případě ověříme, že požadovaný příspěvek opravdu existuje a pokud ano, aktualizujeme jej v databázi.

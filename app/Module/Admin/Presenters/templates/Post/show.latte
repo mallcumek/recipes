@@ -3,7 +3,7 @@
 
 <div class="recipe-detail-container">
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-8">
     <h1 class="pt-2" n:block="title">{$post->title}</h1>
     <p>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -26,11 +26,13 @@
         {/if}
     </p>
     <p>{$post->content}</p>
-    <img src="{$post->image_path}" width="100%" class="object-fit-contain">
+    <img src="{$post->image_path}" width="600" class="object-fit-contain">
     <div class="row p-1">
+
         <div class="col text-center"><span class="fw-bold">Prep Time:</span> <p>{$post->prep_time} mins</p></div>
         <div class="col text-center"><span class="fw-bold">Cook Time:</span> <p>{$post->cook_time} mins</p></div>
         <div class="col text-center"><span class="fw-bold">Servings: </span> <p>{$post->servings}</p></div>
+
     </div>
     <h2>Ingrediens</h2>
     <ul class="list-group">
@@ -39,14 +41,13 @@
         {/foreach}
     </ul>
     <h2>Directions</h2>
-    <ol class="list-group ">
+    <ol class="list-group">
         {var $step = 1} <!-- Počáteční hodnota počítadla kroků -->
         {foreach explode("\n", $post->instructions) as $instruction}
 
-            <li class="list-group-item border border-0">
-                <span class="list-group-item-addon fw-bold step">Step {$step}</span>
+            <li class="list-group-item border border-0 p-0 mb-0">
+                <span class="list-group-item-addon fw-bold step ">Step {$step}</span>
                 <span class="list-group-item-text"><p>{$instruction}</p></span>
-
             </li>
             {var $step=$step+1} <!-- Zvýšení počítadla kroků po každé iteraci -->
         {/foreach}

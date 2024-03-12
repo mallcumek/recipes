@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model;
 
 use Nette;
@@ -7,7 +8,8 @@ final class PostFacade
 {
     public function __construct(
         private Nette\Database\Explorer $database,
-    ) {
+    )
+    {
     }
 
     // V adresáři app/Model/ vytvoříme naši modelovou třídu PostFacade, která se nám bude starat o články:
@@ -29,6 +31,7 @@ final class PostFacade
             ->table('category')
             ->order('category_title ASC'); // ASC pro vzestupné řazení, DESC pro sestupné
     }
+
     public function getAllSubCategories()
     {
         return $this->database
@@ -44,6 +47,14 @@ final class PostFacade
             ->fetch();
     }
 
+    public function getSubCategoryBySubcategorySeoTitle(string $subcategory_seotitle)
+    {
+        return $this->database
+            ->table('subcategory')
+            ->where('subcategory_seotitle', $subcategory_seotitle)
+            ->fetch();
+    }
+
 
     public function getPublicArticlesByCategory(string $categorySeoTitle)
     {
@@ -53,7 +64,8 @@ final class PostFacade
             ->where('created_at < ', new \DateTime)
             ->order('created_at DESC');
     }
-    /*
+    /* Puvodni kod, pred pridanim nacitani vice subkategorii
+
     public function getPublicArticlesBySubcategory(string $subcategorySeoTitle)
     {
         return $this->database
@@ -62,12 +74,16 @@ final class PostFacade
             ->where('created_at < ', new \DateTime)
             ->order('created_at DESC');
     }*/
+
+    /* V tomto řešení jsou obě podmínky pro subcategory_seotitle a subcategory_seotitle2 kombinovány do jednoho řetězce s použitím operátoru OR.
+       Zároveň je nutné použít zástupné symboly ? pro vložení proměnných do dotazu, což je standardní praxe pro předcházení SQL injekcím.
+       Toto by mělo řešit problém s typem argumentu a umožnit filtrování článků podle obou subkategorií.*/
     public function getPublicArticlesBySubcategory(string $subcategorySeoTitle)
     {
         return $this->database
             ->table('posts')
             ->where('created_at < ?', new \DateTime())
-            ->where('subcategory_seotitle = ? OR subcategory_seotitle2 = ?', $subcategorySeoTitle, $subcategorySeoTitle)
+            ->where('subcategory_seotitle = ? OR subcategory_seotitle2 = ? OR subcategory_seotitle3 = ?', $subcategorySeoTitle, $subcategorySeoTitle, $subcategorySeoTitle)
             ->order('created_at DESC');
     }
 
@@ -79,7 +95,6 @@ final class PostFacade
             ->where('category_seotitle', $seoTitle)
             ->order('subcategory_title ASC'); // ASC pro vzestupné řazení, DESC pro sestupné
     }
-
 
 
 }
