@@ -28,7 +28,8 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
     }
 
     public function renderShow(?string $category_seotitle): void
-    {
+    {   // Ulozim do sablony info o aktualnim renderu
+        $this->template->context = 'category';
         // Nacteni kategorie do sablony
         $category = $this->facade->getCategoryBySeoTitle($category_seotitle);
         $this->template->category = $category;
@@ -43,7 +44,8 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
             ->limit(50);
     }
     public function renderSubcategory(?string $subcategory_seotitle, ?string $category_seotitle): void
-    {
+    {   // Ulozim do sablony info o aktualnim renderu, pro podminky v @layout.latte
+        $this->template->context = 'subcategory';
         // Nacteni subkategorii do sablony
         $subcategories = $this->facade->getSubCategories($category_seotitle);
         $this->template->subcategories = $subcategories;

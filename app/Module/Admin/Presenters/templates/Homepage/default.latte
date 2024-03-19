@@ -7,7 +7,7 @@
 
 <div class="box-container d-flex flex-wrap ">
     {* Cylus čtení z databáze a výpisu *}
-    <div n:foreach="$posts as $post" class="box border border-secondary-subtle">
+    <div n:foreach="$posts as $post" class="box  border border-secondary-subtle">
 
 
             <header class="box-head"> <img src="{$post->image_path}" width="100%" class="object-fit-contain"></header>
@@ -17,7 +17,7 @@
 
                     {$post->instructions|truncate:200}</p>
             </main>
-            <footer class="box-foot border border-top border-secondary-subtle">
+            <footer class="box-foot  border-top border-secondary-subtle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                            class="bi bi-clock" viewBox="0 0 16 16">
                     <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>

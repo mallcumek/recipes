@@ -23,6 +23,7 @@ final class RouterFactory
 		$router = new RouteList;
         $router->addRoute('/login', 'Admin:Sign:in');
         $router->addRoute('/registration', 'Admin:Sign:up');
+        $router->addRoute('/signout', 'Admin:Sign:out');
         $router->addRoute('/admin', 'Admin:Dashboard:default');
         $router->addRoute('/create', 'Admin:Dashboard:create');
         $router->addRoute('/edit', 'Admin:Dashboard:edit');

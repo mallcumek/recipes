@@ -33,6 +33,7 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
         $this->template->categories = $this->facade
             ->getCategories()
             ->limit(50);
+        $this->template->context = null; // Výchozí hodnota pro context
 
     }
     // Nyní načteme příspěvky z databáze a pošleme je do šablony, která je následně vykreslí jako HTML kód.

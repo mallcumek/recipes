@@ -38,7 +38,7 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         $this->template->categories = $this->facade
             ->getCategories()
             ->limit(5);
-
+        $this->template->context = null; // Výchozí hodnota pro context
     }
     // Formular pro ukladani (editovanych) prispevku
     protected function createComponentPostForm(): Form

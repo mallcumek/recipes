@@ -4,8 +4,17 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="robots" content="noindex, nofollow">
+	<meta name="description" content="{if $context === 'category' && isset($category->description)}{$category->description}{elseif $context === 'subcategory' && isset($subcategory->description)}{$subcategory->description}{elseif $context === 'post' && isset($post->title)}{$post->title}{/if}"/>
 	{* Page title with optional prefix from the child template *}
-	<title>{ifset title}{include title|stripHtml} | {/ifset}Recipes database</title>
+	<title>
+			{if $context === 'category' && isset($category->category_title)}
+			{$category->category_title|stripHtml} |
+			{elseif $context === 'subcategory' && isset($subcategory->subcategory_title)}
+			{$subcategory->subcategory_title|stripHtml} |
+			{elseif $context === 'post' && isset($post->title)}
+			{$post->title|stripHtml} |
+			{/if}Recipes Database
+	</title>
 
 	{* Link to the Bootstrap stylesheet for styling *}
 	<link rel="stylesheet" href="{$basePath}/assets/css/styles.css">
