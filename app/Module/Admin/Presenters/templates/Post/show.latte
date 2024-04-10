@@ -4,7 +4,7 @@
 <div class="recipe-detail-container">
 <div class="row">
     <div class="col-lg-8">
-    <h1 class="pt-2" n:block="title">{$post->title}</h1>
+    <h1 class="pt-2" n:block="title">{$post->title_longer}</h1>
     <p>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-clock" viewBox="0 0 16 16">
@@ -26,7 +26,7 @@
         {/if}
     </p>
     <p>{$post->content}</p>
-    <img src="{$post->image_path}" width="600" class="object-fit-contain">
+    <img src="{$post->image_path}" width="600" class="object-fit-contain mw-100">
     <div class="row p-1">
 
         <div class="col text-center"><span class="fw-bold">Prep Time:</span> <p>{$post->prep_time} mins</p></div>
@@ -41,13 +41,14 @@
         {/foreach}
     </ul>
     <h2>Directions</h2>
-    <ol class="list-group">
+    <ol class="list-group list-group-numbered">
         {var $step = 1} <!-- Počáteční hodnota počítadla kroků -->
         {foreach explode("\n", $post->instructions) as $instruction}
 
-            <li class="list-group-item border border-0 p-0 mb-0">
-                <span class="list-group-item-addon fw-bold step ">Step {$step}</span>
-                <span class="list-group-item-text"><p>{$instruction}</p></span>
+            <li class="list-group-item d-flex justify-content-between align-items-start  border border-0 p-0 mb-0">
+                <div class="ms-2 me-auto">
+                {$instruction|noescape}
+                </div>
             </li>
             {var $step=$step+1} <!-- Zvýšení počítadla kroků po každé iteraci -->
         {/foreach}
@@ -60,8 +61,24 @@
         {/foreach}
     </div>
 
+        {* ?? je operátor tzv. null coalescing, který se používá pro zjednodušení kontroly na null.
+           Výraz $post->tips_and_tricks ?? '' říká: "Pokud $post->tips_and_tricks existuje a není null,
+           použij jeho hodnotu. Pokud je null, použij jako výchozí hodnotu prázdný řetězec ('')."
+           != '' je podmínka, která se ptá: "Je hodnota na levé straně nerovna prázdnému řetězci?" *}
+        {if $post->tips_and_tricks ?? '' != ''}
+            <h2>Tips and Tricks</h2>
+            {$post->tips_and_tricks}
+        {/if}
 
-    <h2 class="pt-5">Questions & Replies</h2>
+        {if $post->recipe_history ?? '' != ''}
+            <h2>Historical & Cultural Overview</h2>
+            {$post->recipe_history}
+        {/if}
+
+
+
+
+        <h2 class="pt-5">Questions & Replies</h2>
     {* Pokud je již formulář definován v presenteru, můžeme ho vykreslit (zobrazit) v šabloně.
        To uděláme umístěním značky {control} na konec šablony, která vykresluje jeden konkrétní příspěvek, do Post/show.latte.
        Protože se komponenta jmenuje commentForm (název je odvozen od názvu metody createComponentCommentForm), značka bude vypadat takto:

@@ -80,9 +80,13 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             ->setHtmlAttribute('class', 'trida');
         $form->addInteger('cook_time', 'Cook time:');
         $form->addInteger('servings', 'Servings:');
+        $form->addTextArea('tips_and_tricks', 'Tips and Tricks: ')->setRequired()
+            ->setHtmlAttribute('rows', '5');
         $form->addTextArea('chefs_notes', 'Chef\'s Notes')
             ->setHtmlAttribute('rows', '5');
         $form->addTextArea('nutrition_facts', 'Nutrition Facts')
+            ->setHtmlAttribute('rows', '5');
+        $form->addTextArea('recipe_history', 'Historical & Cultural Overview')
             ->setHtmlAttribute('rows', '5');
         // Přidáváme pole pro nahrávání souborů
         $form->addUpload('image', 'Image:');
@@ -92,7 +96,8 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
 
         $form->addSubmit('send', 'Uložit a publikovat');
         $form->onSuccess[] = [$this, 'postFormSucceeded'];
-        $form->setRenderer($this->formatTemplateClass());
+
+       // $form->setRenderer($this->formatTemplateClass());
 
         // Nastavení uživatelského jména do skrytého pole
         $form['username']->setDefaultValue($this->getUser()->getIdentity()->username);

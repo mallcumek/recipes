@@ -11,32 +11,95 @@
  <p>{$subcategory->description}</p>
 
 
-<div class="box-container d-flex flex-wrap border border-primary">
- {* Cyklus čtení z databáze a výpisu *}
-<div n:foreach="$posts as $post" class="box border border-warning">
+<div class="album py-5 bg-body-tertiary">
+
+ <div class="container-fluid border border-danger">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3  d-flex justify-content-center">
+   {* Cyklus čtení z databáze a výpisu *}
+   <div n:foreach="$posts as $post" class="  card shadow-sm  box">
 
 
- <header class="box-head"> <img src="{$post->image_path}" width="100%" class="object-fit-contain"></header>
- <main class="box-body">
-  <h2 class="fs-5 mt-2"><a href="/recipe/{$post->id}-{$post->seotitle}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
-  <p>
-
-   {$post->instructions|truncate:256}</p>
- </main>
- <footer class="box-foot">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-       class="bi bi-clock" viewBox="0 0 16 16">
-   <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-   <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
-  </svg>
-  30 min,
+    <header class="box-head"><img src="{$post->image_path}" width="100%" class="object-fit-contain">
+     <div class="ps-0 ms-0 pb-0 mb-0 pt-1 fs-6">
 
 
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-   <path fill="currentColor" d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-  </svg>
-  {$randomNumber = rand(1, 300)} x   <!-- Vytvoření proměnné s náhodným číslem -->
- </footer>
-</div>
+      <span class="text-end ms-3">{$post->subcategory_seotitle}</span>
+     </div>
+    </header>
+    <main class="box-body   border-secondary">
 
+     <h2 class="fs-5 mt-0 mb-0 pb-0 "><a href="/recipe/{$post->id}-{$post->seotitle}"
+                                         class="link-underline link-underline-opacity-0">{$post->title}</a>
+     </h2>
+
+    </main>
+    <footer class="box-foot d-flex align-items-end      border-secondary-subtle">
+
+     <p>
+
+
+     <div class="d-flex justify-content-between align-items-center">
+      <p>
+       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="purple"
+            class="bi bi-heart" viewBox="0 0 16 16">
+        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+       </svg>
+
+       <small class="text-body-secondary">
+        {$randomNumber = rand(1, 300)}x   <!-- Vytvoření proměnné s náhodným číslem -->
+       </small>
+
+       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-clock" viewBox="0 0 16 16">
+        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+       </svg>
+
+
+       <small class="text-body-secondary">
+        9 mins</small>
+      </p>
+
+     </div>
+
+    </footer>
+
+    {*  <div class="row">
+          <div class="col d-flex justify-content-center">
+              <img src="{$post->image_path}" width="200" class="mw-100 object-fit-contain">
+          </div>
+      </div>
+
+      <h2 class="fs-4 mt-2"><a href="{link Post:show $post->id}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
+
+      <p>
+
+      {$post->content|truncate:256}</p>
+      <div class="fs-4 mb-3">
+          <div class="row">
+              <div class="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                       class="bi bi-clock" viewBox="0 0 16 16">
+                      <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                  </svg>
+                  30 min
+              </div>
+              <div class="col fs-6 text-end">
+                  {$randomNumber = rand(1, 300)}x   <!-- Vytvoření proměnné s náhodným číslem -->
+                  <button type="button" class="btn btn-outline-danger">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                      </svg>
+
+
+                  </button>
+
+              </div>
+          </div>
+
+
+      *}</div>
+  </div>{* end row cols*}
+ </div> {* end  container*}
 </div>
