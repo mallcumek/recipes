@@ -96,7 +96,6 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
 
         $form->addSubmit('send', 'Uložit a publikovat');
         $form->onSuccess[] = [$this, 'postFormSucceeded'];
-
        // $form->setRenderer($this->formatTemplateClass());
 
         // Nastavení uživatelského jména do skrytého pole
