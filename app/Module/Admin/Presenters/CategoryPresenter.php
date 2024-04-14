@@ -38,11 +38,27 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
         $subcategories = $this->facade->getSubCategories($category_seotitle);
         $this->template->subcategories = $subcategories;
 
-        // Nacteni postů do sablony
+        /*/ původní načteni postů do sablony z tutoriálu
         $this->template->posts = $this->facade
             ->getPublicArticlesByCategory($category_seotitle)
             ->limit(50);
+        */
+        $posts = $this->facade->getPublicArticlesByCategory($category_seotitle)->limit(50);
+        $this->template->posts = $posts;
+
+        // Získání unikátních SEO titulů subkategorií z příspěvků
+        $seoTitles = [];
+        foreach ($posts as $post) {
+            if ($post->subcategory_seotitle && !in_array($post->subcategory_seotitle, $seoTitles)) {
+                $seoTitles[] = $post->subcategory_seotitle;
+            }
+        }
+
+        // Získání názvů subkategorií
+        $subcategoryTitles = $this->facade->getSubCategoryTitles($seoTitles);
+        $this->template->subcategoryTitles = $subcategoryTitles;
     }
+
     public function renderSubcategory(?string $subcategory_seotitle, ?string $category_seotitle): void
     {   // Ulozim do sablony info o aktualnim renderu, pro podminky v @layout.latte
         $this->template->context = 'subcategory';
@@ -57,6 +73,19 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
         // Nacteni subkategorie do sablony
         $subcategory = $this->facade->getSubCategoryBySubcategorySeoTitle($subcategory_seotitle);
         $this->template->subcategory = $subcategory;
+
+        // Získání unikátních SEO titulů subkategorií z příspěvků
+        $seoTitles = [];
+        foreach ($posts as $post) {
+            if ($post->subcategory_seotitle && !in_array($post->subcategory_seotitle, $seoTitles)) {
+                $seoTitles[] = $post->subcategory_seotitle;
+            }
+        }
+
+        // Získání názvů subkategorií
+        $subcategoryTitles = $this->facade->getSubCategoryTitles($seoTitles);
+        $this->template->subcategoryTitles = $subcategoryTitles;
+
 
         // Zde přidáme získání informací o kategorii
         if ($category_seotitle !== null) {

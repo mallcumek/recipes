@@ -96,5 +96,20 @@ final class PostFacade
             ->order('subcategory_title ASC'); // ASC pro vzestupné řazení, DESC pro sestupné
     }
 
+    // ChatGPT : Tato metoda vezme pole SEO titulů subkategorií a vrátí páry seoTitle => title.
+    // Funkce fetchPairs je užitečná, pokud chcete výsledek přímo jako asociativní pole.
+    public function getSubCategoryTitles(array $seoTitles)
+    {
+        // Přidání kontrolního filtru, aby se zabránilo zahrnutí prázdných nebo neplatných seoTitles //? nechápu uplně
+        $seoTitles = array_filter($seoTitles);
+        if (empty($seoTitles)) {
+            return [];
+        }
+        return $this->database
+            ->table('subcategory')
+            ->where('subcategory_seotitle', $seoTitles)
+            ->fetchPairs('subcategory_seotitle', 'subcategory_title');
+    }
+
 
 }

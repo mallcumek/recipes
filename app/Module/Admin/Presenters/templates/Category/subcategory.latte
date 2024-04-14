@@ -19,11 +19,13 @@
    <div n:foreach="$posts as $post" class="  card shadow-sm  box">
 
 
-    <header class="box-head"><img src="{$post->image_path}" width="100%" class="object-fit-contain">
+    <header class="box-head"><img src="{$post->image_path}" width="100%" class="object-fit-contain" alt="{$post->title}">
      <div class="ps-0 ms-0 pb-0 mb-0 pt-1 fs-6">
 
 
-      <span class="text-end ms-3">{$post->subcategory_seotitle}</span>
+      <span class="text-end ms-3">
+       {!isset($subcategoryTitles[$post->subcategory_seotitle]) ? 'No Subcategory' : $subcategoryTitles[$post->subcategory_seotitle]}
+      </span>
      </div>
     </header>
     <main class="box-body   border-secondary">
