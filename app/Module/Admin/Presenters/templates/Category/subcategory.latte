@@ -1,11 +1,8 @@
 {block content}
 <p class="subcategory-info">
-<ul class="list-group list-group-horizontal">
- <li class="list-group-item border border-0" n:foreach="$subcategories as $cat">
-  <a n:href="Category:subcategory, 'category_seotitle' => $category->category_seotitle, 'subcategory_seotitle' => $cat->subcategory_seotitle">{$cat->subcategory_title}</a>
-
- </li>
-</ul>
+ {foreach $subcategories as $cat}
+  <a n:href="Category:subcategory, 'category_seotitle' => $category->category_seotitle, 'subcategory_seotitle' => $cat->subcategory_seotitle">{$cat->subcategory_title}</a> |
+ {/foreach}
 </p>
  <h1>{$subcategory->subcategory_title}</h1>
  <p>{$subcategory->description}</p>
@@ -13,7 +10,7 @@
 
 <div class="album py-5 bg-body-tertiary">
 
- <div class="container-fluid border border-danger">
+ <div class="container-fluid">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3  d-flex justify-content-center">
    {* Cyklus čtení z databáze a výpisu *}
    <div n:foreach="$posts as $post" class="  card shadow-sm  box">

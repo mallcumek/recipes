@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="robots" content="noindex, nofollow">
-	<meta name="description" content="{if $context === 'category' && isset($category->description)}{$category->description|stripHtml}{elseif $context === 'subcategory' && isset($subcategory->description)}{$subcategory->description|stripHtml}{elseif $context === 'post' && isset($post->meta_description)}{$post->meta_description|stripHtml}{/if}"/>
+	<meta name="description" content="{if $context === 'category' && isset($category->description)}{$category->description|stripHtml}{elseif $context === 'subcategory' && isset($subcategory->description)}{$subcategory->description|stripHtml}{elseif $context === 'post' && isset($post->meta_description)}{$post->meta_description|stripHtml}{else}Welcome to our Cooking Guide - explore delicious recipes and cooking tips! {/if}"/>
 	{* Podminky pro zobrazeni dynamickych titulku. Pomohl Chatgpt*}
 	<title>{if $context === 'category' && isset($category->category_title)}{$category->category_title|stripHtml} Recipes{elseif $context === 'subcategory' && isset($subcategory->subcategory_title)}{$subcategory->subcategory_title|stripHtml} Recipes{elseif $context === 'post' && isset($post->title)}{$post->title|stripHtml} | Recipe {else} Online Recipes{/if}</title>
 

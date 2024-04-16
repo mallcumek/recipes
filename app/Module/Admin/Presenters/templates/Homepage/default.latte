@@ -7,10 +7,10 @@
 
 <div class="album py-5 bg-body-tertiary">
 
-    <div class="container-fluid  border-danger">
+    <div class="container-fluid">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3  d-flex justify-content-center">
             {* Cyklus čtení z databáze a výpisu *}
-            <div n:foreach="$posts as $post" class=" col ">
+            <div n:foreach="$posts as $post" class="col">
 
                 <div class="card shadow-sm  box">
                     <header class="box-head p-0 m-0">
@@ -28,16 +28,16 @@
                                 {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
                                 n:attr="'loading' => $iterator->first ? 'eager' : 'lazy'">
                     </header>
-                    <main class="box-body   border-secondary">
-                    <span class="text-end ms-3">
+                    <main class="box-body">
+                    <span class="text-end">
                          {!isset($subcategoryTitles[$post->subcategory_seotitle]) ? 'No Subcategory' : $subcategoryTitles[$post->subcategory_seotitle]}
                     </span>
-                        <h2 class="fs-5 mt-0 mb-0 pb-0 "><a href="/recipe/{$post->id}-{$post->seotitle}"
+                        <h2 class="fs-5 mt-0 mb-0 pb-0"><a href="/recipe/{$post->id}-{$post->seotitle}"
                                                             class="link-underline link-underline-opacity-0">{$post->title}</a>
                         </h2>
 
                     </main>
-                    <footer class="box-foot d-flex align-items-end      border-secondary-subtle">
+                    <footer class="box-foot d-flex align-items-end">
 
                         <p>
 
@@ -61,7 +61,7 @@
 
 
                                 <small class="text-body-secondary">
-                                    9 mins</small>
+                                    {$post->prep_time+$post->cook_time} mins</small>
                             </p>
 
                         </div>

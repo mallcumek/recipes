@@ -6,12 +6,13 @@
     <div class="col-lg-8">
     <h1 class="pt-2" n:block="title">{$post->title_longer}</h1>
     <p>
+
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-clock" viewBox="0 0 16 16">
             <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
         </svg>
-        30 min &nbsp;
+        {$post->prep_time+$post->cook_time} &nbsp; min
 
 
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart"
@@ -26,7 +27,21 @@
         {/if}
     </p>
     <p>{$post->content}</p>
-    <img src="{$post->image_path}" width="600" class="object-fit-contain mw-100">
+        <img
+                {*V oknech šířky 768 pixelů a více se obrázek vykresluje do plochy o šířce 300 pixelů ((min-width: 768px) 300px).
+                  Ve všech ostatních velikostech okna, tedy do 767 pixelů, zabere 100 procent šířky okna (100vw).
+                  *pro menší displeje zmenšen prostor a test výkonu page speed insight  *}
+                src="{$post->image_path|replace:".webp","-400w.webp"}"
+                srcset="{$post->image_path|replace:".webp","-600w.webp"} 600w,
+                                     {$post->image_path|replace:".webp","-800w.webp"} 800w,
+                                     {$post->image_path|replace:".webp","-1000w.webp"} 1000w"
+            sizes="
+    (min-width: 768px) 300px,
+    100vw"
+            width="auto" height="auto" alt="{$post->title}"
+            class="rounded-top card-img-top bd-placeholder-img object-fit-contain"
+                {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
+                               >
     <div class="row p-1">
 
         <div class="col text-center"><span class="fw-bold">Prep Time:</span> <p>{$post->prep_time} mins</p></div>

@@ -34,8 +34,9 @@ final class RouterFactory
         // Tato routa na kategorie zmenila automaticky odkazy v @layout.latte n:href="Category:show $cat->category_seotitle"
         // Pokud u routy <subcategory_seotitle> neni "cesta navíc" např /cat/<subcategory_seotitle>, tak nefunguje admin.dashboard
         // = pise chybu promenny " "category_title" on null" v sablone Category/show.latte. Pritom si má zobrazovat Dashboard/default.latte
-        $router->addRoute('/<category_seotitle>/', 'Admin:Category:show');
-        $router->addRoute('/<category_seotitle>/<subcategory_seotitle>/', 'Admin:Category:subcategory');
+        $router->addRoute('/recipes/<category_seotitle>/', 'Admin:Category:show');
+        $router->addRoute('/recipes/<category_seotitle>/<subcategory_seotitle>/', 'Admin:Category:subcategory');
+
 
         // Default route that maps to the Admin Dashboard
         $router->addRoute('<presenter>/<action>', 'Admin:Homepage:default');
