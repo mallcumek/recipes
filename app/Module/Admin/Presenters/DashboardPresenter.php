@@ -39,6 +39,8 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             ->getCategories()
             ->limit(5);
         $this->template->context = null; // Výchozí hodnota pro context
+        // Získání absolutní URL aktuální stránky
+        $this->template->canonicalUrl = $this->getHttpRequest()->getUrl()->getAbsoluteUrl();
     }
     // Formular pro ukladani (editovanych) prispevku
     protected function createComponentPostForm(): Form

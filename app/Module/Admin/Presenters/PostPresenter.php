@@ -22,6 +22,8 @@ final class PostPresenter extends Nette\Application\UI\Presenter
             ->getCategories()
             ->limit(5);
         $this->template->context = 'post'; // Nastavte kontext pro příspěvky
+        // Získání absolutní URL aktuální stránky
+        $this->template->canonicalUrl = $this->getHttpRequest()->getUrl()->getAbsoluteUrl();
     }
     // Připojení k databázi pro zobrazení příspěvku
     // Metoda renderShow vyžaduje jeden argument – ID jednoho konkrétního článku, který má být zobrazen.

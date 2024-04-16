@@ -34,7 +34,8 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
             ->getCategories()
             ->limit(50);
         $this->template->context = null; // Výchozí hodnota pro context
-
+        // Získání absolutní URL aktuální stránky
+        $this->template->canonicalUrl = $this->getHttpRequest()->getUrl()->getAbsoluteUrl();
     }
     // Nyní načteme příspěvky z databáze a pošleme je do šablony, která je následně vykreslí jako HTML kód.
     // Pro tohle je určena takzvaná render metoda:

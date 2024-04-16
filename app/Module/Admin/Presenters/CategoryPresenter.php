@@ -24,7 +24,8 @@ final class CategoryPresenter extends Nette\Application\UI\Presenter
         $this->template->categories = $this->facade
             ->getCategories()
             ->limit(50);
-
+        // Získání absolutní URL aktuální stránky
+        $this->template->canonicalUrl = $this->getHttpRequest()->getUrl()->getAbsoluteUrl();
     }
 
     public function renderShow(?string $category_seotitle): void
