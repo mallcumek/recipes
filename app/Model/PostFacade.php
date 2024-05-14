@@ -25,6 +25,31 @@ final class PostFacade
     // Třída PostFacade si v konstruktoru řekne o předání Nette\Database\Explorer a jelikož je tato třída v DI containeru zaregistrovaná, kontejner tuto instanci vytvoří a předá ji.
     // DI za nás takto vytvoří instanci PostFacade a předá ji v konstruktoru třídě HomePresenter, který si o něj požádal. Taková matrjoška. :)
     // Všichni si jen říkají co chtějí a nezajímají se o to, kde se co a jak vytváří. O vytvoření se stará DI container.
+
+    //
+    public function findPublishedArticles(int $limit, int $offset): Nette\Database\ResultSet
+    {
+        return $this->database->query('
+			SELECT * FROM posts
+			WHERE created_at < ?
+			ORDER BY created_at DESC
+			LIMIT ?
+			OFFSET ?',
+            new \DateTime, $limit, $offset,
+        );
+    }
+
+    /**
+     * Vrací celkový počet publikovaných článků
+     */
+    public function getPublishedArticlesCount(): int
+    {
+        return $this->database->fetchField('SELECT COUNT(*) FROM posts WHERE created_at < ?', new \DateTime);
+    }
+
+
+
+
     public function getCategories()
     {
         return $this->database
@@ -110,6 +135,23 @@ final class PostFacade
             ->where('subcategory_seotitle', $seoTitles)
             ->fetchPairs('subcategory_seotitle', 'subcategory_title');
     }
+
+    //funkce pro načtení databáze hodnocení postů z komentářů
+    public function getRatingsForPost($postId): array
+    {
+        $comments = $this->database->table('comments')
+            ->select('rating')  // Ensure only the 'rating' column is being selected
+            ->where('post_id', $postId)
+            ->fetchAll();  // Fetch all records as an array of ActiveRow objects
+
+        // Extract ratings from the ActiveRow objects
+        $ratings = array_map(function($comment) {
+            return $comment->rating;
+        }, $comments);
+
+        return $ratings;
+    }
+
 
 
 }

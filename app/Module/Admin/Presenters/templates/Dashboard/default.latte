@@ -1,6 +1,8 @@
 {block content}
 <h1>Administation</h1>
-
+    {if $user->isLoggedIn()}
+        <a n:href="Dashboard:create">Write new post</a>
+    {/if}
 <p>If you see this page, it means you have successfully logged in.</p>
 
 

@@ -63,6 +63,8 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         // Přidání prázdné možnosti pro subkategorie
         $subcategoryOptions = ['' => 'No subcategory'] + $subcategoryOptions;
         $form = new Form;
+        $form->addTextArea('recipe_post', 'Recipe post:')
+            ->setHtmlAttribute('rows', '5');
         $form->addText('title', 'Recipe title:')->setRequired();
         $form->addText('title_longer', 'Recipe longer title:');
         $form->addTextArea('meta_description', 'Meta description:')
@@ -90,6 +92,7 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             ->setHtmlAttribute('rows', '5');
         $form->addTextArea('recipe_history', 'Historical & Cultural Overview')
             ->setHtmlAttribute('rows', '5');
+        $form->addText('image_alt', 'Image alt:');
         // Přidáváme pole pro nahrávání souborů
         $form->addUpload('image', 'Image:');
 

@@ -1,3 +1,6 @@
+<IfModule mod_headers.c>
+    Header set Cache-Control "max-age=31536000"
+</IfModule>
 # Apache configuration file (see https://httpd.apache.org/docs/current/mod/quickreference.html)
 
 # Grant all access permissions
@@ -7,6 +10,7 @@ Require all granted
 <IfModule mod_autoindex.c>
 	Options -Indexes
 </IfModule>
+# cash
 
 # Enable pretty URLs (removing the need for "index.php" in the URL)
 <IfModule mod_rewrite.c>

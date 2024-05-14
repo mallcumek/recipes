@@ -19,3 +19,138 @@
     padding-left: 0.5rem;
     padding-bottom: 0;
 }
+
+
+/* rating form stars*/
+/*hodnocení hvězdičky */
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.3rem;
+    --stroke: #666;
+    --fill: #ff613a;
+}
+
+.rating input {
+    appearance: unset;
+}
+
+.rating label {
+    cursor: pointer;
+}
+
+.rating svg {
+    width: 2rem;
+    height: 2rem;
+    overflow: visible;
+    fill: transparent;
+    stroke: var(--stroke);
+    stroke-linejoin: bevel;
+    stroke-dasharray: 12;
+    animation: idle 4s linear infinite;
+    transition: stroke 0.2s, fill 0.5s;
+}
+
+@keyframes idle {
+    from {
+        stroke-dashoffset: 24;
+    }
+}
+
+.rating label:hover svg {
+    stroke: var(--fill);
+}
+
+.rating input:checked ~ label svg {
+    transition: 0s;
+    animation: idle 4s linear infinite, yippee 0.75s backwards;
+    fill: var(--fill);
+    stroke: var(--fill);
+    stroke-opacity: 0;
+    stroke-dasharray: 0;
+    stroke-linejoin: miter;
+    stroke-width: 8px;
+}
+
+@keyframes yippee {
+    0% {
+        transform: scale(1);
+        fill: var(--fill);
+        fill-opacity: 0;
+        stroke-opacity: 1;
+        stroke: var(--stroke);
+        stroke-dasharray: 10;
+        stroke-width: 1px;
+        stroke-linejoin: bevel;
+    }
+
+    30% {
+        transform: scale(0);
+        fill: var(--fill);
+        fill-opacity: 0;
+        stroke-opacity: 1;
+        stroke: var(--stroke);
+        stroke-dasharray: 10;
+        stroke-width: 1px;
+        stroke-linejoin: bevel;
+    }
+
+    30.1% {
+        stroke: var(--fill);
+        stroke-dasharray: 0;
+        stroke-linejoin: miter;
+        stroke-width: 8px;
+    }
+
+    60% {
+        transform: scale(1.2);
+        fill: var(--fill);
+    }
+}
+
+/* Skrytí radio buttons */
+.rating .form-check-input {
+    visibility: hidden;
+    position: absolute;
+}
+/* End rating form stars*/
+
+
+
+* {
+    box-sizing: border-box;
+}
+
+.ratings {
+    width: 120px;
+    height: 24px;
+    position: relative;
+    background-color: gray;
+}
+
+.ratings progress.ratings-bg {
+    -webkit-appearance: none;
+    -moz-appearence: none;
+    appearance: none;
+    border: none;
+    display: inline-block;
+    height: 24px;
+    width: 100%;
+    color: orange;
+}
+
+.ratings progress.ratings-bg::-webkit-progress-value {
+    background-color: orange;
+}
+
+.ratings progress.ratings-bg::-moz-progress-bar {
+    background-color: orange;
+}
+
+.ratings svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

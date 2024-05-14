@@ -3,15 +3,32 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="robots" content="noindex, nofollow">
+	<meta name="author" content="Martin Krsik">
+
 	<meta name="description" content="{if $context === 'category' && isset($category->description)}{$category->description|stripHtml}{elseif $context === 'subcategory' && isset($subcategory->description)}{$subcategory->description|stripHtml}{elseif $context === 'post' && isset($post->meta_description)}{$post->meta_description|stripHtml}{else}Welcome to our Cooking Guide - explore delicious recipes and cooking tips! {/if}"/>
 	{* Podminky pro zobrazeni dynamickych titulku. Pomohl Chatgpt*}
 	<title>{if $context === 'category' && isset($category->category_title)}{$category->category_title|stripHtml} Recipes{elseif $context === 'subcategory' && isset($subcategory->subcategory_title)}{$subcategory->subcategory_title|stripHtml} Recipes{elseif $context === 'post' && isset($post->title)}{$post->title|stripHtml} | Recipe {else} Cooking Guide | Recipes reviews & rating{/if}</title>
+{* vyřešit jak dat promenny do toho javascriptu, aby phpstorm nebrečel*}
+	{if $context === 'recipe'}
+		<script type="application/ld+json">
+        {$jsonLdData|noescape}
+    </script>
+	{/if}
 
 	<link rel="canonical" href="{$canonicalUrl}">
-	<link rel="stylesheet" href="{$basePath}/assets/css/styles.css">
 	<link rel="stylesheet" href="{$basePath}/assets/css/color-modes.css">
 	<link rel="stylesheet" href="{$basePath}/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{$basePath}/assets/css/styles.css">
+
+
+	<link rel="apple-touch-icon" sizes="180x180" href="{$basePath}/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="{$basePath}/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="{$basePath}/favicon-16x16.png">
+	<link rel="manifest" href="{$basePath}/site.webmanifest">
+	<link rel="mask-icon" href="{$basePath}/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
+
 </head>
 <body>
 <!------------------------------ color mode button ------------------------------------------->
@@ -145,13 +162,21 @@
 		<p class="float-end mb-1">
 			<a href="#">Back to top</a>
 		</p>
-		<p class="mb-1">Coock Book &copy; Mallcom, but please download and customize it for yourself!</p>
+		<p class="mb-1"> &copy; 2024 recipes.krsik.com,  All rights reserved. Created by Mallcom.</p>
 
 	</div>
 </footer>
 	<script src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
 	<script src="{$basePath}/assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
 	<script src="{$basePath}/assets/js/color-modes.js"></script>
+<script type='text/javascript'>
+	window.smartlook||(function(d) {
+		var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+		var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+		c.charset='utf-8';c.src='https://web-sdk.smartlook.com/recorder.js';h.appendChild(c);
+	})(document);
+	smartlook('init', '0ba1d0837d1e077ca7c9cb1ffebe98f99ac616b1', { region: 'eu' });
+</script>
 {/block}
 </body>
 </html>

@@ -1,104 +1,80 @@
 {block content}
 <p class="subcategory-info">
- {foreach $subcategories as $cat}
-  <a n:href="Category:subcategory, 'category_seotitle' => $category->category_seotitle, 'subcategory_seotitle' => $cat->subcategory_seotitle">{$cat->subcategory_title}</a> |
- {/foreach}
+    {foreach $subcategories as $cat}
+        <a n:href="Category:subcategory, 'category_seotitle' => $category->category_seotitle, 'subcategory_seotitle' => $cat->subcategory_seotitle">{$cat->subcategory_title}</a> |
+    {/foreach}
 </p>
- <h1>{$subcategory->subcategory_title}</h1>
- <p>{$subcategory->description}</p>
+<h1>{$subcategory->subcategory_title}</h1>
+<p>{$subcategory->description}</p>
 
 
 <div class="album py-5 bg-body-tertiary">
 
- <div class="container-fluid">
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3  d-flex justify-content-center">
-   {* Cyklus čtení z databáze a výpisu *}
-   <div n:foreach="$posts as $post" class="  card shadow-sm  box">
+    <div class="container-fluid">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3  d-flex justify-content-center">
+            {* Cyklus čtení z databáze a výpisu *}
+
+            <div n:foreach="$posts as $post" class="col">
+
+                <div class="card shadow-sm  box">
+                    <header class="box-head p-0 m-0">
+
+                        <img
+                                {*V oknech šířky 768 pixelů a více se obrázek vykresluje do plochy o šířce 300 pixelů ((min-width: 768px) 300px).
+                                  Ve všech ostatních velikostech okna, tedy do 767 pixelů, zabere 100 procent šířky okna (100vw).
+                                  *pro menší displeje zmenšel prostor a test výkonu page speed insight  *}
+                                src="{$post->image_path|replace:".webp","-400w.webp"}"
+                                srcset="{$post->image_path|replace:".webp","-600w.webp"} 600w,
+                                     {$post->image_path|replace:".webp","-800w.webp"} 800w,
+                                     {$post->image_path|replace:".webp","-1000w.webp"} 1000w"
+                            sizes="(min-width: 768px) 300px, 80vw"
+                            width="200" height="200" alt="{$post->title}"
+                            class="img-fluid rounded-top card-img-top bd-placeholder-img object-fit-contain"
+                                {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
+                                n:attr="'loading' => $iterator->first ? 'eager' : 'lazy'">
+
+                    </header>
+                    <main class="box-body">
+                    <span class="text-end">
+                         {!isset($subcategoryTitles[$post->subcategory_seotitle]) ? 'No Subcategory' : $subcategoryTitles[$post->subcategory_seotitle]}
+                    </span>
+                        <h2 class="fs-5 mt-0 mb-0 pb-0"><a href="/recipe/{$post->id}-{$post->seotitle}"
+                                                           class="link-underline link-underline-opacity-0">{$post->title}</a>
+                        </h2>
+
+                    </main>
+                    <footer class="box-foot d-flex align-items-end">
+
+                        <p>
 
 
-    <header class="box-head"><img src="{$post->image_path}" width="100%" class="object-fit-contain" alt="{$post->title}">
-     <div class="ps-0 ms-0 pb-0 mb-0 pt-1 fs-6">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-clock" viewBox="0 0 16 16">
+                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                                </svg>
+                                <small class="text-body-secondary">
+                                    {$post->prep_time+$post->cook_time} mins</small>,
+
+                                <small class="text-body-secondary">
+                                    {ifset $caloriesData[$post->id]}
+                                        {$caloriesData[$post->id]} kcal
+                                    {/ifset}
+                                </small>
 
 
-      <span class="text-end ms-3">
-       {!isset($subcategoryTitles[$post->subcategory_seotitle]) ? 'No Subcategory' : $subcategoryTitles[$post->subcategory_seotitle]}
-      </span>
-     </div>
-    </header>
-    <main class="box-body   border-secondary">
+                            </p>
 
-     <h2 class="fs-5 mt-0 mb-0 pb-0 "><a href="/recipe/{$post->id}-{$post->seotitle}"
-                                         class="link-underline link-underline-opacity-0">{$post->title}</a>
-     </h2>
+                        </div>
 
-    </main>
-    <footer class="box-foot d-flex align-items-end      border-secondary-subtle">
+                    </footer>
 
-     <p>
+                 </div>
 
-
-     <div class="d-flex justify-content-between align-items-center">
-      <p>
-       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="purple"
-            class="bi bi-heart" viewBox="0 0 16 16">
-        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-       </svg>
-
-       <small class="text-body-secondary">
-        {$randomNumber = rand(1, 300)}x   <!-- Vytvoření proměnné s náhodným číslem -->
-       </small>
-
-       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-clock" viewBox="0 0 16 16">
-        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
-       </svg>
-
-
-       <small class="text-body-secondary">
-        9 mins</small>
-      </p>
-
-     </div>
-
-    </footer>
-
-    {*  <div class="row">
-          <div class="col d-flex justify-content-center">
-              <img src="{$post->image_path}" width="200" class="mw-100 object-fit-contain">
-          </div>
-      </div>
-
-      <h2 class="fs-4 mt-2"><a href="{link Post:show $post->id}" class="link-underline link-underline-opacity-0">{$post->title}</a></h2>
-
-      <p>
-
-      {$post->content|truncate:256}</p>
-      <div class="fs-4 mb-3">
-          <div class="row">
-              <div class="col">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                       class="bi bi-clock" viewBox="0 0 16 16">
-                      <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
-                  </svg>
-                  30 min
-              </div>
-              <div class="col fs-6 text-end">
-                  {$randomNumber = rand(1, 300)}x   <!-- Vytvoření proměnné s náhodným číslem -->
-                  <button type="button" class="btn btn-outline-danger">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                      </svg>
-
-
-                  </button>
-
-              </div>
-          </div>
-
-
-      *}</div>
-  </div>{* end row cols*}
- </div> {* end  container*}
+            </div> {* end foreach *}
+        </div>{* end row cols*}
+    </div> {* end  container*}
 </div>
