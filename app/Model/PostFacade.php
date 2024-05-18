@@ -152,6 +152,13 @@ final class PostFacade
         return $ratings;
     }
 
+    // Metoda pro vyhledávání příspěvků podle titulu
+    public function searchPostsByTitle(string $query): Nette\Database\Table\Selection
+    {
+        return $this->database->table('posts')
+            ->where('LOWER(title) LIKE LOWER(?)', '%' . $query . '%') // Case-insensitive vyhledávání
+            ->order('created_at DESC');
+    }
 
 
 }

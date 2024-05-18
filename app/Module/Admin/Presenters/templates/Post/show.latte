@@ -12,7 +12,9 @@
         {if $user->isLoggedIn() && $user->isInRole('admin')}
             <a n:href="Dashboard:edit $post->id"> (Edit post)</a>
         {/if}
-
+        <br>
+  <a href="/recipes/{$post->category_seotitle}">{$post->category_seotitle}</a> →
+   <a href="/recipes/{$post->category_seotitle}/{$post->subcategory_seotitle}">{$post->subcategory_seotitle}</a>
          {if isset($averageRating) && isset($totalRatings)}
         <div class="average d-inline-flex gap-3">
 
@@ -58,9 +60,13 @@
         <div class="col text-center"><span class="fw-bold">Servings: </span> <p>{$post->servings}</p></div>
 
     </div>
-
+<a href="#recipe" class="fs-3">skip to recipe
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
+    </svg>
+</a>
         {$post->recipe_post|noescape}
-<h2 class="mt-2">Recipe:</h2>
+<h2 id="recipe" class="mt-2">Recipe:</h2>
     <h3 class="mt-2">Ingrediens</h3>
     <ul class="list-group">
         {foreach explode("\n", $post->ingredients) as $ingredient}
@@ -116,7 +122,7 @@
 
     {*hodnotici formular co zapisuje do db*}
                     <div class="pt-2 mb-0 pb-2">
-                <form n:name="commentForm" class="form-group">
+                <form id="demo-form" n:name="commentForm" class="form-group">
                     <div class="rating form-check">
                         {foreach $form['ratio']->getItems() as $key => $label}
 
@@ -155,7 +161,13 @@
                         <div class="mb-3 row">
                             <div class="col-sm-3 col-form-label"></div>
                             <div class="col-sm-9">
-                        <button n:name="send" class="btn btn-primary">Send</button>
+
+                                <div id="recaptcha-container"></div>
+                        <button n:name="send" class="btn btn-primary g-recaptcha"
+                                              data-sitekey="6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK"
+                                              data-callback='onSubmit'
+                                              data-action='submit'>Send</button>
+
                             </div>
                     </div>
 
@@ -169,9 +181,9 @@
 
 
     {foreach $comments as $comment}
-            <p class="mb-0">  <b><a href="mailto:{$comment->email}" n:tag-if="$comment->email">
+            <p class="mb-0">  <b>
                     {$comment->name}
-                </a></b>: <br>
+               </b>: <br>
                 {for $i=0; $i < $comment->rating; $i++}
                     <div class="rating d-inline">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: #ff613a; stroke: #ff613a;">

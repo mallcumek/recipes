@@ -23,6 +23,8 @@ final class PostPresenter extends Nette\Application\UI\Presenter
             ->getCategories()
             ->limit(5);
         $this->template->context = 'post'; // Nastavte kontext pro příspěvky
+        $this->template->context2 = 'recipe'; // Nastavte kontext pro příspěvky
+
         // Získání absolutní URL aktuální stránky
         $this->template->canonicalUrl = $this->getHttpRequest()->getUrl()->getAbsoluteUrl();
     }
@@ -31,8 +33,9 @@ final class PostPresenter extends Nette\Application\UI\Presenter
     // Poté tento článek načte z databáze a předá ho do šablony.
     public function renderShow(int $postId): void
     {
+
         // Ulozim do sablony info o aktualnim renderu
-        $this->template->context = 'recipe';
+        //$this->template->context = 'recipe';
 
         $post = $this->database
             ->table('posts')
@@ -80,6 +83,8 @@ final class PostPresenter extends Nette\Application\UI\Presenter
         $imagePath = ltrim($post->image_path, '/');
         // Sestavení plné URL pro obrázek
         $imageUrl = $baseUrl . '/' . $imagePath;
+        // Formátování data na Y-m-d
+        $datePublished = (new \DateTime($post->created_at))->format('Y-m-d');
 
         // Připravíme data pro JSON LD - chceme hvezdove hodnoceni receptu pro google, generujeme Json do head v html
         $jsonLdData = Json::encode([
@@ -91,8 +96,10 @@ final class PostPresenter extends Nette\Application\UI\Presenter
                 '@type' => 'Person',
                 'name' => $post->username,
             ],
-            'datePublished' => $post->created_at,
+            'datePublished' => $datePublished,
             'description' => $post->content,
+            'prepTime' => 'PT' . $post->prep_time . 'M',
+            'cookTime' => 'PT' . $post->cook_time . 'M',
             'nutrition' => [
                 '@type' => 'NutritionInformation',
                 'calories' => $caloriesData . ' calories',
