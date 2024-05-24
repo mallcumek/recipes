@@ -16,6 +16,7 @@ final class PostPresenter extends Nette\Application\UI\Presenter
     )
     {
     }
+
     public function beforeRender(): void
     {
         // Nacteni kategorii do sablony
@@ -61,9 +62,6 @@ final class PostPresenter extends Nette\Application\UI\Presenter
         $this->template->averageRating = round($averageRating, 1);
 
 
-
-
-
         // Funkce na vytazeni poctu kalorii ze sloupce nutrition_facts.
         // Projití každého příspěvku a extrakce kalorií z textového řetězce v poli nutrition_facts.
 
@@ -86,8 +84,8 @@ final class PostPresenter extends Nette\Application\UI\Presenter
         // Formátování data na Y-m-d
         $datePublished = (new \DateTime($post->created_at))->format('Y-m-d');
 
-        // Připravíme data pro JSON LD - chceme hvezdove hodnoceni receptu pro google, generujeme Json do head v html
-        $jsonLdData = Json::encode([
+        // Připravíme data pro JSON LD - chceme hvězdičkové hodnocení receptu pro Google, generujeme JSON do head v HTML
+        $jsonLdData = [
             '@context' => 'https://schema.org/',
             '@type' => 'Recipe',
             'name' => $post->title,
@@ -105,24 +103,32 @@ final class PostPresenter extends Nette\Application\UI\Presenter
                 'calories' => $caloriesData . ' calories',
             ],
             'recipeYield' => $post->servings . ' Servings',
-            'aggregateRating' => [
+        ];
+
+        // Podmíněné přidání aggregateRating pouze pokud existují hodnocení
+        if ($totalRatings > 0) {
+            $jsonLdData['aggregateRating'] = [
                 '@type' => 'AggregateRating',
                 'ratingValue' => $averageRating,
                 'ratingCount' => $totalRatings,
-            ],
-        ]);
+            ];
+        } else {
 
+        }
+
+        // Kódování pole do JSON formátu
+        $jsonLdData = Json::encode($jsonLdData);
         // Předáme JSON LD data do šablony
         $this->template->jsonLdData = $jsonLdData;
 
 
-
     }
-        // Továrna na formulář v Presenteru
+
+    // Továrna na formulář v Presenteru
     protected function createComponentCommentForm(): Form
     {
         //Vytvoření pole pro hodnocení
-        $rating= [
+        $rating = [
             '5' => '5star',
             '4' => '4star',
             '3' => '3star',
@@ -148,29 +154,41 @@ final class PostPresenter extends Nette\Application\UI\Presenter
     // Odeslané hodnoty získáme ve $data. A následně uložíme data do databázové tabulky comments.
     private function commentFormSucceeded(\stdClass $data, array $values): void
     {
-        // Získání hodnoty hodnocení z formuláře
-        $selectedValue = $values['ratio'];
 
-        // Podmínka pro záměnu prázdné hodnoty null z formuláře na číslo 0 u proměnné $selectedValue,
-        // aby s tím mohla fasáda počítat a šlo to uložit
-        if ($selectedValue == null) {
-            $selectedValue = 0;
+        $recaptchaToken = $data->recaptchaToken;
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=tvuj_secret_key&response=".$recaptchaToken);
+        $responseKeys = json_decode($response, true);
+
+        if(intval($responseKeys["success"]) !== 1) {
+            // Zpracování selhání reCAPTCHA
+            $this->flashMessage('reCAPTCHA ověření selhalo, zkuste to prosím znovu.', 'error');
+        } else {
+            // reCAPTCHA ověření prošlo, pokračujte s uložením komentáře
+            // Vložte svůj kód pro zpracování a uložení komentáře
+            // Získání hodnoty hodnocení z formuláře
+            $selectedValue = $values['ratio'];
+
+            // Podmínka pro záměnu prázdné hodnoty null z formuláře na číslo 0 u proměnné $selectedValue,
+            // aby s tím mohla fasáda počítat a šlo to uložit
+            if ($selectedValue == null) {
+                $selectedValue = 0;
+            }
+            $postId = $this->getParameter('postId');
+
+            $this->database->table('comments')->insert([
+                'post_id' => $postId,
+                'name' => $data->name,
+                'email' => $data->email,
+                'content' => $data->content,
+                'rating' => $selectedValue,
+            ]);
+
+            $this->flashMessage('Thanks for review and comment !', 'success');
+            $this->redirect('this');
         }
-        $postId = $this->getParameter('postId');
 
-        $this->database->table('comments')->insert([
-            'post_id' => $postId,
-            'name' => $data->name,
-            'email' => $data->email,
-            'content' => $data->content,
-            'rating' => $selectedValue,
-        ]);
 
-        $this->flashMessage('Thanks for review and comment !', 'success');
-        $this->redirect('this');
     }
-
-
 
 
 }

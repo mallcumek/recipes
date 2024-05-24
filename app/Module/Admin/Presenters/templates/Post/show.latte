@@ -50,7 +50,7 @@
             sizes="
     (min-width: 768px) 300px, 80vw"
             width="200" height="200"  alt="{$post->title}"
-            class="img-fluid rounded-top card-img-top bd-placeholder-img object-fit-contain"
+            class="img-fluid rounded-top card-img-top bd-placeholder-img object-fit-contain" loading="eager"
                 {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
                                >
     <div class="row p-1">
@@ -156,14 +156,28 @@
                             <div class="col-sm-9">
                             <textarea n:name="content" class="form-control" placeholder="Your Message"></textarea>
                             </div>
+                            <input type="hidden" id="recaptchaToken" name="recaptchaToken">
                         </div>
+                    <script n:syntax="off">
+                        document.getElementById("submit-button").addEventListener("click", function(event) {
+                            event.preventDefault(); // Zabraňte výchozímu odeslání formuláře
+                            grecaptcha.ready(function() {
+                                grecaptcha.execute('6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK', {action: 'submit'}).then(function(token) {
+                                    // Vložení tokenu do skrytého pole
+                                    document.getElementById('recaptchaToken').value = token;
+                                    // Odeslání formuláře
+                                    document.getElementById("demo-form").submit();
+                                });
+                            });
+                        });
+                    </script>
 
                         <div class="mb-3 row">
                             <div class="col-sm-3 col-form-label"></div>
                             <div class="col-sm-9">
 
                                 <div id="recaptcha-container"></div>
-                        <button n:name="send" class="btn btn-primary g-recaptcha"
+                        <button id="submit-button" n:name="send" class="btn btn-primary g-recaptcha"
                                               data-sitekey="6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK"
                                               data-callback='onSubmit'
                                               data-action='submit'>Send</button>
@@ -178,6 +192,21 @@
        Pokud k atributu připojíte předponu tag-, funkcionalita se aplikuje pouze na HTML tag, ne na jeho obsah.
        Toto nám umožňuje udělat ze jména komentátora odkaz pouze v případě, že poskytl svůj e-mail.
     *}
+
+        <script n:syntax="off">
+            document.getElementById("demo-form").addEventListener("submit", function(event) {
+                event.preventDefault(); // Zabraňte výchozímu odeslání formuláře
+                grecaptcha.ready(function() {
+                    grecaptcha.execute('6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK', {action: 'submit'}).then(function(token) {
+                        // Vložení tokenu do skrytého pole
+                        document.getElementById('recaptchaToken').value = token;
+                        // Odeslání formuláře
+                        document.getElementById("demo-form").submit();
+                    });
+                });
+            });
+        </script>
+
 
 
     {foreach $comments as $comment}

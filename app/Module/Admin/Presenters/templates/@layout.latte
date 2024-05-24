@@ -189,25 +189,7 @@
 	smartlook('init', '0ba1d0837d1e077ca7c9cb1ffebe98f99ac616b1', { region: 'eu' });
 </script>
 
-<script>
-	document.getElementById('demo-form').addEventListener('focusin', function() {
-		if (!document.getElementById('recaptcha-script')) {
-			var recaptchaScript = document.createElement('script');
-			recaptchaScript.src = 'https://www.google.com/recaptcha/api.js';
-			recaptchaScript.id = 'recaptcha-script';
-			recaptchaScript.async = true;
-			recaptchaScript.defer = true;
-			document.body.appendChild(recaptchaScript);
 
-			// Přidání reCAPTCHA widgetu do formuláře
-			recaptchaScript.onload = function() {
-				grecaptcha.render('recaptcha-container', {
-					'sitekey': '6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK'
-				});
-			};
-		}
-	}, { once: true }); // Event listener se spustí jen jednou
-</script>
 {/block}
 </body>
 </html>
