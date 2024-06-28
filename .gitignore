@@ -2,7 +2,7 @@ vendor
 composer.lock
 temp
 .idea
-config/local.neon
+config/
 log/
 www/img
 www/data
