@@ -158,19 +158,7 @@
                             </div>
                             <input type="hidden" id="recaptchaToken" name="recaptchaToken">
                         </div>
-                    <script n:syntax="off">
-                        document.getElementById("submit-button").addEventListener("click", function(event) {
-                            event.preventDefault(); // Zabraňte výchozímu odeslání formuláře
-                            grecaptcha.ready(function() {
-                                grecaptcha.execute('6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK', {action: 'submit'}).then(function(token) {
-                                    // Vložení tokenu do skrytého pole
-                                    document.getElementById('recaptchaToken').value = token;
-                                    // Odeslání formuláře
-                                    document.getElementById("demo-form").submit();
-                                });
-                            });
-                        });
-                    </script>
+
 
                         <div class="mb-3 row">
                             <div class="col-sm-3 col-form-label"></div>
@@ -193,19 +181,6 @@
        Toto nám umožňuje udělat ze jména komentátora odkaz pouze v případě, že poskytl svůj e-mail.
     *}
 
-        <script n:syntax="off">
-            document.getElementById("demo-form").addEventListener("submit", function(event) {
-                event.preventDefault(); // Zabraňte výchozímu odeslání formuláře
-                grecaptcha.ready(function() {
-                    grecaptcha.execute('6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK', {action: 'submit'}).then(function(token) {
-                        // Vložení tokenu do skrytého pole
-                        document.getElementById('recaptchaToken').value = token;
-                        // Odeslání formuláře
-                        document.getElementById("demo-form").submit();
-                    });
-                });
-            });
-        </script>
 
 
 

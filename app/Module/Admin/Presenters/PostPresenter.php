@@ -95,6 +95,7 @@ final class PostPresenter extends Nette\Application\UI\Presenter
                 'name' => $post->username,
             ],
             'datePublished' => $datePublished,
+            'recipeCategory' => $post->category_seotitle,
             'description' => $post->content,
             'prepTime' => 'PT' . $post->prep_time . 'M',
             'cookTime' => 'PT' . $post->cook_time . 'M',
@@ -155,24 +156,10 @@ final class PostPresenter extends Nette\Application\UI\Presenter
     private function commentFormSucceeded(\stdClass $data, array $values): void
     {
 
-        $recaptchaToken = $data->recaptchaToken;
-        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=tvuj_secret_key&response=".$recaptchaToken);
-        $responseKeys = json_decode($response, true);
 
-        if(intval($responseKeys["success"]) !== 1) {
-            // Zpracování selhání reCAPTCHA
-            $this->flashMessage('reCAPTCHA ověření selhalo, zkuste to prosím znovu.', 'error');
-        } else {
-            // reCAPTCHA ověření prošlo, pokračujte s uložením komentáře
-            // Vložte svůj kód pro zpracování a uložení komentáře
-            // Získání hodnoty hodnocení z formuláře
-            $selectedValue = $values['ratio'];
 
-            // Podmínka pro záměnu prázdné hodnoty null z formuláře na číslo 0 u proměnné $selectedValue,
-            // aby s tím mohla fasáda počítat a šlo to uložit
-            if ($selectedValue == null) {
-                $selectedValue = 0;
-            }
+            // reCAPTCHA verifikace prošla, pokračujte s uložením komentáře
+            $selectedValue = $values['ratio'] ?? 0;
             $postId = $this->getParameter('postId');
 
             $this->database->table('comments')->insert([
@@ -183,9 +170,8 @@ final class PostPresenter extends Nette\Application\UI\Presenter
                 'rating' => $selectedValue,
             ]);
 
-            $this->flashMessage('Thanks for review and comment !', 'success');
+            $this->flashMessage('Děkujeme za hodnocení a komentář!', 'success');
             $this->redirect('this');
-        }
 
 
     }

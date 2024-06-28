@@ -67,6 +67,7 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
             ->setHtmlAttribute('rows', '5');
         $form->addText('title', 'Recipe title:')->setRequired();
         $form->addText('title_longer', 'Recipe longer title:');
+        $form->addText('cuisine', 'Cuisine:');
         $form->addTextArea('meta_description', 'Meta description:')
         ->setHtmlAttribute('rows', '3');
         $form->addSelect('category_seotitle', 'Category select:', $categoryOptions); // Použijeme dynamicky načtené kategorie
