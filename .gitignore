@@ -2,7 +2,8 @@ vendor
 composer.lock
 temp
 .idea
-config/
+config
 log/
 www/img
 www/data
+data
