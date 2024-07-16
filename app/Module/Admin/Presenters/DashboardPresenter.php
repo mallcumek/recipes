@@ -43,6 +43,37 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         $this->template->canonicalUrl = $this->getHttpRequest()->getUrl()->getAbsoluteUrl();
     }
     // Formular pro ukladani (editovanych) prispevku
+    protected function createComponentAdminForm(): Form
+    {
+        $form = new Form;
+        $form->addText('cuisine_title', 'Cuisine title:')->setRequired();
+        $form->addText('cuisine_description', 'Cuisine Description:');
+        $form->addSubmit('send', 'Add cuisine');
+        $form->onSuccess[] = [$this, 'adminformSucceeded'];
+        return $form;
+    }
+    public function adminFormSucceeded(Form $form, $data): void
+    {
+        // Použití Nette\Utils\Strings pro vytvoření SEO-friendly názvu
+        $seoTitle = Strings::webalize($data->cuisine_title);
+
+        // Příprava dat pro vložení
+        $newData = [
+            'cuisine_title' => $data->cuisine_title,
+            'cuisine_description' => $data->cuisine_description,
+            'cuisine_seotitle' => $seoTitle
+        ];
+
+        // Vložení dat do databáze
+        $this->database->table('cuisines')->insert($newData);
+
+        // Vytvoření zprávy pro uživatele a přesměrování
+        $this->flashMessage('Cuisine successfully added.');
+        $this->redirect('Dashboard:default');
+    }
+
+
+    // Formular pro ukladani (editovanych) prispevku
     protected function createComponentPostForm(): Form
     {
         // Zde načteme kategorie  do pole pro vypsání ve formuláři
