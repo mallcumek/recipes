@@ -47,7 +47,9 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
     {
         $form = new Form;
         $form->addText('cuisine_title', 'Cuisine title:')->setRequired();
-        $form->addText('cuisine_description', 'Cuisine Description:');
+        $form->addTextArea('cuisine_description', 'Cuisine Description:')
+            ->setHtmlAttribute('rows', '2');
+
         $form->addSubmit('send', 'Add cuisine');
         $form->onSuccess[] = [$this, 'adminformSucceeded'];
         return $form;
@@ -93,12 +95,23 @@ final class DashboardPresenter extends Nette\Application\UI\Presenter
         }
         // Přidání prázdné možnosti pro subkategorie
         $subcategoryOptions = ['' => 'No subcategory'] + $subcategoryOptions;
+
+        // Získání kuchyní z databáze
+        $cuisines = $this->facade->getCuisines();
+        $cuisineOptions = [];
+        foreach ($cuisines as $cuisine) {
+            $cuisineOptions[$cuisine->id] = $cuisine->cuisine_title;
+        }
+
         $form = new Form;
         $form->addTextArea('recipe_post', 'Recipe post:')
             ->setHtmlAttribute('rows', '5');
         $form->addText('title', 'Recipe title:')->setRequired();
         $form->addText('title_longer', 'Recipe longer title:');
-        $form->addText('cuisine', 'Cuisine:');
+        // Přidání výběru kuchyně do formuláře
+        $form->addSelect('cuisine_id', 'Cuisine:', $cuisineOptions)
+            ->setPrompt('Choose a cuisine')
+            ->setRequired('Please select a cuisine.');
         $form->addTextArea('meta_description', 'Meta description:')
         ->setHtmlAttribute('rows', '3');
         $form->addSelect('category_seotitle', 'Category select:', $categoryOptions); // Použijeme dynamicky načtené kategorie

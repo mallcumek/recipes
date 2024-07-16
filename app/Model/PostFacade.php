@@ -160,5 +160,9 @@ final class PostFacade
             ->order('created_at DESC');
     }
 
-
+    // Načtení kuchyní
+    public function getCuisines()
+    {
+        return $this->database->table('cuisines')->order('cuisine_title ASC');
+    }
 }
