@@ -117,6 +117,18 @@ final class PostPresenter extends Nette\Application\UI\Presenter
 
         }
 
+        // Rozdělení ingrediencí do pole na základě nových řádků (chatgpt)
+        $ingredientsList = explode("\n", $post->ingredients);
+
+// Očištění každé ingredience (odstranění přebytečných mezer a prázdných řádků)
+        $ingredientsList = array_map('trim', $ingredientsList);
+        $ingredientsList = array_filter($ingredientsList, function($ingredient) {
+            return !empty($ingredient);
+        });
+
+// Přidání pole ingrediencí do JSON-LD dat
+        $jsonLdData['recipeIngredient'] = $ingredientsList;
+
         // Kódování pole do JSON formátu
         $jsonLdData = Json::encode($jsonLdData);
         // Předáme JSON LD data do šablony
