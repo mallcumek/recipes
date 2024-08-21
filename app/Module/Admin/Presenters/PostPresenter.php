@@ -46,6 +46,11 @@ final class PostPresenter extends Nette\Application\UI\Presenter
         if (!$post) {
             $this->error('Stránka nebyla nalezena');
         }
+        // Získání názvu kuchyně podle cuisineID
+        $cuisineTitle = $this->facade->getCuisineTitleByCuisineID($post->cuisine_id);
+        // Uložení názvu kuchyně do šablony
+        $this->template->cuisine_title = $cuisineTitle;
+
         // Uložení příspěvku do šablony
         $this->template->post = $post;
         // Uložení komentáře do šablony
@@ -97,6 +102,7 @@ final class PostPresenter extends Nette\Application\UI\Presenter
             'datePublished' => $datePublished,
             'recipeCategory' => $post->category_seotitle,
             'description' => $post->content,
+            'recipeCuisine' => $cuisineTitle,
             'prepTime' => 'PT' . $post->prep_time . 'M',
             'cookTime' => 'PT' . $post->cook_time . 'M',
             'nutrition' => [

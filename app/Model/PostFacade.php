@@ -165,4 +165,15 @@ final class PostFacade
     {
         return $this->database->table('cuisines')->order('cuisine_title ASC');
     }
+    // Načtení názvu kuchyně na základě cusine_id z tabulky post
+
+    public function getCuisineTitleByCuisineID(string $cuisineID): ?string
+    {
+        $row = $this->database
+            ->table('cuisines')
+            ->where('id', $cuisineID)
+            ->fetch();
+
+        return $row?->cuisine_title;
+    }
 }
