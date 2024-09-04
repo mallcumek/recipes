@@ -14,7 +14,7 @@
 
                 <div class="card shadow-sm  box">
                     <header class="box-head p-0 m-0">
-
+<a href="/recipe/{$post->id}-{$post->seotitle}">
                         <img
                                 {*V oknech šířky 768 pixelů a více se obrázek vykresluje do plochy o šířce 300 pixelů ((min-width: 768px) 300px).
                                   Ve všech ostatních velikostech okna, tedy do 767 pixelů, zabere 100 procent šířky okna (100vw).
@@ -28,6 +28,7 @@
                             class="img-fluid rounded-top card-img-top bd-placeholder-img object-fit-contain"
                                 {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
                                 n:attr="'loading' => $iterator->first ? 'eager' : 'lazy'">
+                        </a>
 
                     </header>
                     <main class="box-body">
