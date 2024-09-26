@@ -2,207 +2,235 @@
 
 
 <div class="recipe-detail-container">
-<div class="row">
-    <div class="col-lg-8">
-    <h1 class="pt-2" n:block="title">{$post->title_longer}</h1>
-    <p>
+    <div class="row">
+        <div class="col-lg-8">
+            <a href="/recipe/{$post->id}-{$post->seotitle}"><h1 class="pt-2" n:block="title">{$post->title_longer}</h1>
+            </a>
+            <p>
 
-        Added by<strong> {$post->username}</strong>, {$post->created_at|date:'F j, Y'}
-        <!-- Vytvoření proměnné s náhodným číslem -->
-        {if $user->isLoggedIn() && $user->isInRole('admin')}
-            <a n:href="Dashboard:edit $post->id"> (Edit post)</a>
-        {/if}
-        <br>
-  <a href="/recipes/{$post->category_seotitle}">{$post->category_seotitle}</a> →
-   <a href="/recipes/{$post->category_seotitle}/{$post->subcategory_seotitle}">{$post->subcategory_seotitle}</a>
-   <br>
-        {$cuisine_title} cuisine
-         {if isset($averageRating) && isset($totalRatings)}
-        <div class="average d-inline-flex gap-3">
+                Added by<strong> {$post->username}</strong>, {$post->created_at|date:'F j, Y'}
+                {* Pokud je uživatel přihlášen a má roli admina, zobrazí odkaz pro úpravu příspěvku *}
+                {if $user->isLoggedIn() && $user->isInRole('admin')}
+                    <a n:href="Dashboard:edit $post->id"> (Edit post)</a>
+                {/if}
+                <br>
+                {* Odkazy na kategorii a podkategorii receptu *}
+                <a href="/recipes/{$post->category_seotitle}">{$post->category_seotitle}</a> →
+                <a href="/recipes/{$post->category_seotitle}/{$post->subcategory_seotitle}">{$post->subcategory_seotitle}</a>
+                <br>
+                {$cuisine_title} cuisine
 
-            <svg style="display:none;">
-                <defs>
-                    <symbol id="fivestars">
-                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24" fill="white" fill-rule="evenodd"/>
-                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24" fill="white" fill-rule="evenodd" transform="translate(24)"/>
-                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24" fill="white" fill-rule="evenodd" transform="translate(48)"/>
-                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24" fill="white" fill-rule="evenodd" transform="translate(72)"/>
-                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24" fill="white" fill-rule="evenodd"  transform="translate(96)"/>
-                    </symbol>
-                </defs>
-            </svg>
-            <div class="ratings">
-                <!--   <div class="rating-bg" style="width: 90%;"></div> -->
-                <progress class="ratings-bg" value="{$averageRating}" max="5"></progress>
-                <svg><use xlink:href="#fivestars"/></svg>
+                {* Zobrazení průměrného hodnocení a počtu recenzí *}
+                {if isset($averageRating) && isset($totalRatings)}
+            <div class="average d-inline-flex gap-3">
+
+                <svg style="display:none;">
+                    <defs>
+                        <symbol id="fivestars">
+                            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+                                  fill="white" fill-rule="evenodd"/>
+                            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+                                  fill="white" fill-rule="evenodd" transform="translate(24)"/>
+                            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+                                  fill="white" fill-rule="evenodd" transform="translate(48)"/>
+                            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+                                  fill="white" fill-rule="evenodd" transform="translate(72)"/>
+                            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+                                  fill="white" fill-rule="evenodd" transform="translate(96)"/>
+                        </symbol>
+                    </defs>
+                </svg>
+                <div class="ratings">
+                    <!--   <div class="rating-bg" style="width: 90%;"></div> -->
+                    <progress class="ratings-bg" value="{$averageRating}" max="5"></progress>
+                    <svg>
+                        <use xlink:href="#fivestars"/>
+                    </svg>
+                </div>
+                <span><b>{$averageRating}</b>  Rating </b>|</b> <b>{$totalRatings}</b> Reviews</span>
             </div>
-            <span><b>{$averageRating}</b>  Rating </b>|</b> <b>{$totalRatings}</b> Reviews</span>
-        </div>
-        {/if}
-    </p>
-    <p>{$post->content}</p>
-        <img
-                {*V oknech šířky 768 pixelů a více se obrázek vykresluje do plochy o šířce 300 pixelů ((min-width: 768px) 300px).
-                  Ve všech ostatních velikostech okna, tedy do 767 pixelů, zabere 100 procent šířky okna (100vw).
-                  *pro menší displeje zmenšen prostor a test výkonu page speed insight  *}
-                src="{$post->image_path|replace:".webp","-400w.webp"}"
-                srcset="{$post->image_path|replace:".webp","-600w.webp"} 600w,
+            {/if}
+            </p>
+
+            {* Zobrazení obsahu příspěvku *}
+            <p>{$post->content}</p>
+            <a href="{$post->image_path|replace:".webp","-1000w.webp"}">
+                <img
+                        {*V oknech šířky 768 pixelů a více se obrázek vykresluje do plochy o šířce 300 pixelů ((min-width: 768px) 300px).
+                          Ve všech ostatních velikostech okna, tedy do 767 pixelů, zabere 100 procent šířky okna (100vw).
+                          *pro menší displeje zmenšen prostor a test výkonu page speed insight  *}
+                        src="{$post->image_path|replace:".webp","-400w.webp"}"
+                        srcset="{$post->image_path|replace:".webp","-600w.webp"} 600w,
                                      {$post->image_path|replace:".webp","-800w.webp"} 800w,
                                      {$post->image_path|replace:".webp","-1000w.webp"} 1000w"
-            sizes="
+                    sizes="
     (min-width: 768px) 300px, 80vw"
-            width="200" height="200"  alt="{$post->title}"
-            class="img-fluid rounded-top card-img-top bd-placeholder-img object-fit-contain" loading="eager"
-                {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
-                               >
-    <div class="row p-1">
+                    width="200" height="200" alt="{$post->title}"
+                    class="img-fluid rounded-top card-img-top bd-placeholder-img object-fit-contain" loading="eager"
+                        {* Pro první prvek z výpisu použijeme loading eager, zbytek lazy.*}
+                ></a>
+            <div class="row p-1">
 
-        <div class="col text-center"><span class="fw-bold">Prep Time:</span> <p>{$post->prep_time} mins</p></div>
-        <div class="col text-center"><span class="fw-bold">Cook Time:</span> <p>{$post->cook_time} mins</p></div>
-        <div class="col text-center"><span class="fw-bold">Servings: </span> <p>{$post->servings}</p></div>
+                <div class="col text-center"><span class="fw-bold">Prep Time:</span>
+                    <p>{$post->prep_time} mins</p></div>
+                <div class="col text-center"><span class="fw-bold">Cook Time:</span>
+                    <p>{$post->cook_time} mins</p></div>
+                <div class="col text-center"><span class="fw-bold">Servings: </span>
+                    <p>{$post->servings}</p></div>
 
-    </div>
-<a href="#recipe" class="fs-3">skip to recipe
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
-    </svg>
-</a>
-        {$post->recipe_post|noescape}
-<h2 id="recipe" class="mt-2">Recipe:</h2>
-    <h3 class="mt-2">Ingrediens</h3>
-    <ul class="list-group">
-        {foreach explode("\n", $post->ingredients) as $ingredient}
-            <li class="list-group-item border border-0 p-1 mb-0">{$ingredient|noescape}</li>
-        {/foreach}
-    </ul>
-    <h3 class="mt-3">Directions</h3>
-    <ol class="list-group list-group-numbered">
-        {var $step = 1} <!-- Počáteční hodnota počítadla kroků -->
-        {foreach explode("\n", $post->instructions) as $instruction}
-
-            <li class="list-group-item d-flex justify-content-between align-items-start  border border-0 p-1 mb-0">
-                <div class="ms-2 me-auto">
-                {$instruction|noescape}
-                </div>
-            </li>
-            {var $step=$step+1} <!-- Zvýšení počítadla kroků po každé iteraci -->
-        {/foreach}
-    </ol>
-
-    <h3 class="mt-3">Nutrition Facts</h3>
-    <div class="row">
-        {foreach explode("\n", $post->nutrition_facts) as $nutrition_fact}
-            <div class="col text-center">{$nutrition_fact}</div>
-        {/foreach}
-    </div>
-
-        {* ?? je operátor tzv. null coalescing, který se používá pro zjednodušení kontroly na null.
-           Výraz $post->tips_and_tricks ?? '' říká: "Pokud $post->tips_and_tricks existuje a není null,
-           použij jeho hodnotu. Pokud je null, použij jako výchozí hodnotu prázdný řetězec ('')."
-           != '' je podmínka, která se ptá: "Je hodnota na levé straně nerovna prázdnému řetězci?" *}
-        {if $post->tips_and_tricks ?? '' != ''}
-            <h3 class="mt-3">Tips and Tricks</h3>
-            {$post->tips_and_tricks}
-        {/if}
-
-        {if $post->recipe_history ?? '' != ''}
-            <h3 class="mt-3">Historical & Cultural Overview</h3>
-            {$post->recipe_history}
-        {/if}
-
-
-
-
-        <h2 class="pt-5">Reviews & Rating</h2>
-    {* Pokud je již formulář definován v presenteru, můžeme ho vykreslit (zobrazit) v šabloně.
-       To uděláme umístěním značky {control} na konec šablony, která vykresluje jeden konkrétní příspěvek, do Post/show.latte.
-       Protože se komponenta jmenuje commentForm (název je odvozen od názvu metody createComponentCommentForm), značka bude vypadat takto:
-    *}
-    {*{control commentForm}
-    {include "../@form.latte", name: commentForm|noescape}*}
+            </div>
+            <a href="#recipe" class="fs-3">skip to recipe
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-arrow-down" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
+                </svg>
+            </a>
+            {$post->recipe_post|noescape}
+            <h2 id="recipe" class="mt-2">Recipe:</h2>
+            <h3 class="mt-2">Ingrediens</h3>
+            <ul class="list-group">
+                {foreach explode("\n", $post->ingredients) as $ingredient}
+                    <li class="list-group-item border border-0 p-1 mb-0">{$ingredient|noescape}</li>
+                {/foreach}
+            </ul>
+            <h3 class="mt-3">Directions</h3>
+            <ol class="list-group list-group-numbered">
+                {* Rozdělení textu na jednotlivé kroky podle nového řádku - gpt*}
+                {foreach explode("\n", $post->instructions) as $instruction}
+                    {* Každý krok receptu je zobrazen jako položka v očíslovaném seznamu *}
+                    <li class="list-group-item d-flex justify-content-between align-items-start  border border-0 p-1 mb-0">
+                        <div class="ms-2 me-auto">
+                            {$instruction|noescape}
+                        </div>
+                    </li>
+                {/foreach}
+            </ol>
+            <h3 class="mt-3">Nutrition Facts</h3>
+            <div class="row">
+                {foreach explode("\n", $post->nutrition_facts) as $nutrition_fact}
+                    <div class="col text-center">{$nutrition_fact}</div>
+                {/foreach}
+            </div>
+            {* ?? je operátor tzv. null coalescing, který se používá pro zjednodušení kontroly na null.
+               Výraz $post->tips_and_tricks ?? '' říká: "Pokud $post->tips_and_tricks existuje a není null,
+               použij jeho hodnotu. Pokud je null, použij jako výchozí hodnotu prázdný řetězec ('')."
+               != '' je podmínka, která se ptá: "Je hodnota na levé straně nerovna prázdnému řetězci?" *}
+            {if $post->tips_and_tricks ?? '' != ''}
+                <h3 class="mt-3">Tips and Tricks</h3>
+                {* Cyklus *}
+                <ol class="list-group list-group-numbered">
+                    {foreach explode("\n", $post->tips_and_tricks) as $tips_and_tricks}
+                        <li class="list-group-item d-flex justify-content-between align-items-start  border border-0 p-1 mb-0">
+                            <div class="ms-2 me-auto">
+                                {$tips_and_tricks|noescape}
+                            </div>
+                        </li>
+                    {/foreach}
+                </ol>
 
 
-    {*hodnotici formular co zapisuje do db*}
-                    <div class="pt-2 mb-0 pb-2">
+
+
+            {/if}
+
+            {if $post->recipe_history ?? '' != ''}
+                <h3 class="mt-3">Historical & Cultural Overview</h3>
+                {$post->recipe_history}
+            {/if}
+
+
+            <h2 class="pt-5">Reviews & Rating</h2>
+            {* Pokud je již formulář definován v presenteru, můžeme ho vykreslit (zobrazit) v šabloně.
+               To uděláme umístěním značky {control} na konec šablony, která vykresluje jeden konkrétní příspěvek, do Post/show.latte.
+               Protože se komponenta jmenuje commentForm (název je odvozen od názvu metody createComponentCommentForm), značka bude vypadat takto:
+            *}
+            {*{control commentForm}
+            {include "../@form.latte", name: commentForm|noescape}*}
+
+
+            {*hodnotici formular co zapisuje do db*}
+            <div class="pt-2 mb-0 pb-2">
                 <form id="demo-form" n:name="commentForm" class="form-group">
                     <div class="rating form-check">
                         {foreach $form['ratio']->getItems() as $key => $label}
 
-                                <input n:name="ratio:$key" class="form-check-input " id="{$label}-{$post->id}">
-                                <label n:name="ratio:$key" class="form-check-label" for="{$label}-{$post->id}">
+                            <input n:name="ratio:$key" class="form-check-input " id="{$label}-{$post->id}">
+                            <label n:name="ratio:$key" class="form-check-label" for="{$label}-{$post->id}">
 
-                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                             <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                                                  pathLength="360">
-                                            </path>
-                                        </svg>
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                                          pathLength="360">
+                                    </path>
+                                </svg>
 
-                                </label>
+                            </label>
 
                         {/foreach}
                     </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-3 col-form-label"><label for="frm-commentForm-email">Name:</label></div>
-                            <div class="col-sm-9">
+                    <div class="mb-3 row">
+                        <div class="col-sm-3 col-form-label"><label for="frm-commentForm-email">Name:</label></div>
+                        <div class="col-sm-9">
                             <input n:name="name" class="form-control" placeholder="Your Name">
-                            </div>
                         </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-3 col-form-label"><label for="frm-commentForm-email">Email:</label></div>
-                            <div class="col-sm-9">
-                                <input n:name="email" class="form-control" placeholder="Your Email">
-                            </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-3 col-form-label"><label for="frm-commentForm-email">Email:</label></div>
+                        <div class="col-sm-9">
+                            <input n:name="email" class="form-control" placeholder="Your Email">
                         </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-3 col-form-label"><label for="frm-commentForm-email">Message:</label></div>
-                            <div class="col-sm-9">
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-3 col-form-label"><label for="frm-commentForm-email">Message:</label></div>
+                        <div class="col-sm-9">
                             <textarea n:name="content" class="form-control" placeholder="Your Message"></textarea>
-                            </div>
-                            <input type="hidden" id="recaptchaToken" name="recaptchaToken">
                         </div>
+                        <input type="hidden" id="recaptchaToken" name="recaptchaToken">
+                    </div>
 
 
-                        <div class="mb-3 row">
-                            <div class="col-sm-3 col-form-label"></div>
-                            <div class="col-sm-9">
+                    <div class="mb-3 row">
+                        <div class="col-sm-3 col-form-label"></div>
+                        <div class="col-sm-9">
 
-                                <div id="recaptcha-container"></div>
-                        <button id="submit-button" n:name="send" class="btn btn-primary g-recaptcha"
-                                              data-sitekey="6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK"
-                                              data-callback='onSubmit'
-                                              data-action='submit'>Send</button>
+                            <div id="recaptcha-container"></div>
+                            <button id="submit-button" n:name="send" class="btn btn-primary g-recaptcha"
+                                    data-sitekey="6Lej0-ApAAAAAGSV_Bi1svLiZuHfFaSHLr8YOvjK"
+                                    data-callback='onSubmit'
+                                    data-action='submit'>Send
+                            </button>
 
-                            </div>
+                        </div>
                     </div>
 
                 </form>
 
-                    </div>
-    {* Všimněte si speciálního atributu n:tag-if. Již víte jak n:atributy fungují.
-       Pokud k atributu připojíte předponu tag-, funkcionalita se aplikuje pouze na HTML tag, ne na jeho obsah.
-       Toto nám umožňuje udělat ze jména komentátora odkaz pouze v případě, že poskytl svůj e-mail.
-    *}
+            </div>
+            {* Všimněte si speciálního atributu n:tag-if. Již víte jak n:atributy fungují.
+               Pokud k atributu připojíte předponu tag-, funkcionalita se aplikuje pouze na HTML tag, ne na jeho obsah.
+               Toto nám umožňuje udělat ze jména komentátora odkaz pouze v případě, že poskytl svůj e-mail.
+            *}
 
 
 
 
-    {foreach $comments as $comment}
-            <p class="mb-0">  <b>
-                    {$comment->name}
-               </b>: <br>
-                {for $i=0; $i < $comment->rating; $i++}
-                    <div class="rating d-inline">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: #ff613a; stroke: #ff613a;">
-                    <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                          pathLength="360">
-                    </path>
-                </svg>
-    </div>
-                {/for}
-            </p>
-       <small> {$comment->created_at|date:'F j, Y'}</small>
-            <p> {$comment->content}</p>
-    {/foreach}
-    </div> {* end col *}
- </div> {* end row *}
+            {foreach $comments as $comment}
+                <p class="mb-0"><b>
+                        {$comment->name}
+                    </b>: <br>
+                    {for $i = 0; $i < $comment->rating; $i++}
+                <div class="rating d-inline">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: #ff613a; stroke: #ff613a;">
+                        <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                              pathLength="360">
+                        </path>
+                    </svg>
+                </div>
+            {/for}
+                </p>
+                <small> {$comment->created_at|date:'F j, Y'}</small>
+                <p> {$comment->content}</p>
+            {/foreach}
+        </div> {* end col *}
+    </div> {* end row *}
 </div>

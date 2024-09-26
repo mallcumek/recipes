@@ -30,6 +30,16 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
 
     public function beforeRender(): void
     {
+        // Záchrana od Chatgpt - parent beforeRender udrží zobrazení loginu i po klikání v rámci webu
+        // (opakované kliknutí na stejnou stránku nezobrazilo přihlášeného uživatele, až po F5 - obnovení stránky)
+        // ((Takže byl pořád přihlášený, ale v šabloně se to nevykreslilo))
+        parent::beforeRender();
+        if (!$this->getUser()->isLoggedIn()) {
+            // Tady můžete buď přesměrovat nebo jen zobrazit zprávu
+            $this->flashMessage('You can upload own recipe or cooking photos after Login.');
+            // $this->redirect('Sign:in');
+        }
+
         // Nacteni kategorii do sablony
         $this->template->categories = $this->facade
             ->getCategories()
